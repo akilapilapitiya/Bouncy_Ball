@@ -5,6 +5,7 @@
 #include <chrono>          //To make the code sleep
 #include <cstdlib>         // For system()
 #include <fstream>         //File Handling
+#include <cstring>
 using namespace std;
 
 
@@ -17,7 +18,10 @@ const int frameHeight = 25;
 int splashScreenRefresh = 4; //Duration of the Splash Screen 
 
 
-int mainMenuUserInput = 0;  //Store the users Input from thew Main Menu,
+int mainMenuUserInput = 0;  //Store the users Input from thew Main Menu
+
+
+string valueStore;         //Used in File Read to get User Scores
 
 
                                     // G L O B A L I Z E   A L L  F U N C T I O N S
@@ -27,7 +31,7 @@ int mainMenu();            //Main Menu Configurations
 void returnToMainMenu();   //Function to Return to the Main Menu from Menu Elements
 void splashScreen();       //Splash Screen Design for the Game
 void creditsPage();        //Credits Page from main Menu
-void scoreFileReader();    //Reads the file used to store Scores
+int scoreFileReader();    //Reads the file used to store Scores
 void gameInstructions();   //Instruction Page for the game
 
 
@@ -120,9 +124,16 @@ void creditsPage(){//AKILA
 }
 
 
-void scoreFileReader(){//AKILA
+int scoreFileReader(){//AKILA
     system("cls");
     cout << "Display Scorecard";
+    fstream readFile;
+    readFile.open("score.txt", ios::in);
+    if(!readFile.is_open()){
+        cout << "Error In Opening the File";
+        return(0);
+    }
+    readFile.close();
     returnToMainMenu();
 }
 
