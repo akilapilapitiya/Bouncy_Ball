@@ -63,8 +63,8 @@ void gameFrame(){//AKILA
 // FUNCTION to display and configure the main menu (Inputs taken from user to GLOBAL mainMenuUserInput)
 int mainMenu(){//AKILA
     system("cls");
-    cout << "Game Menu";
-    cout << "1 - New Game, 2 - Scores, 3 - Instructions, 4 - Credits,  5 - Exit ";
+    cout << "Game Menu" << endl;
+    cout << "1 - New Game \n2 - Scores \n3 - Instructions \n4 - Credits \n5 - Exit ";
     cin >> mainMenuUserInput;
     switch(mainMenuUserInput){
         case (1): cout << "Hello";              //New Game Connection
