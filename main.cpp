@@ -272,9 +272,9 @@ void gameDraw() //CHANUKA
         cout<<endl;
         cout<<"       gggggg                                                 oooo  "<<endl;        
         cout<<"    ggg                                                     oooooooo   "<<endl;    
-        cout<<"    gg     gggg      gggg     gg  gg   gg    ggggggg       oooooooooo     vv       vv  ggggggg  RR   RR   "<<endl;                                  
-        cout<<"    gg       gg    gggggg     ggg   ggg  gg  ee            oooooooooo      vv     vv   ee       RR  RR     "<<endl;                       
-        cout<<"    gg       gg    gggggg     gg    gg   gg  ggggggg       oooooooooo       vv   vv    ggggggg  RR RR     "<<endl;                               
+        cout<<"    gg     gggg      gggg     gg  gg   gg    ggggggg       oo      oo     vv       vv  ggggggg  RR   RR   "<<endl;                                  
+        cout<<"    gg       gg    gggggg     ggg   ggg  gg  ee            oo      oo      vv     vv   ee       RR  RR     "<<endl;                       
+        cout<<"    gg       gg    gggggg     gg    gg   gg  ggggggg       oo      oo       vv   vv    ggggggg  RR RR     "<<endl;                               
         cout<<"     gg      gg     ggggg     gg    gg   gg  ee             oooooooo         vv vv     ee       RR       "<<endl;                       
         cout<<"      ggggggggg      ggggggg  gg    gg   gg  ggggggg          oooo            vv       ggggggg  RR        "<<endl;                            
     }
