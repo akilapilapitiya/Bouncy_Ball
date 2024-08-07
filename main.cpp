@@ -30,9 +30,9 @@ enum eDirect
 eDirect dir;
 
 
-bool gameOver;//check whether game is ended or not(Chanuka)
-int moveUp;
-int moveDown;//moving ball upwards and dawnwards
+bool gameOver;      //check whether game is ended or not(Chanuka)
+int moveUp;         //moving ball upwards
+int moveDown;       //moving ball downwards
 //----------------------------------------------------------------------------------------------------------------------------------------------
 
                                     // G L O B A L I Z E   A L L  F U N C T I O N S
@@ -46,6 +46,7 @@ int scoreFileReader();     //Reads the file used to store Scores
 void gameInstructions();   //Instruction Page for the game
 void input();              // Function to handle keyboard input
 int ingameLogic();         //Control newgame Functions 
+int gameDraw();            //Draw the Game
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
@@ -192,9 +193,17 @@ void input(){//BENARAGAMA
     }
 }
 
+
+//-----------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
 int ingameLogic(){//CHANUKA
-
-
     switch (dir)
     {
     case UP:                    //Move up
@@ -207,8 +216,27 @@ int ingameLogic(){//CHANUKA
         break;
     }
 
+    return(0);    
+}
+
+
+int gameDraw(){//CHANUKA
+
+    int ballPushDistance = 20;
+
+    cout <<setw(ballPushDistance) <<" ";
+    cout << setw(10)<< "   ,@@@@," <<endl;
+    cout <<setw(ballPushDistance) <<" ";
+	cout <<setw(10)<< "  ,@@@@@@@@," <<endl;
+    cout <<setw(ballPushDistance) <<" ";
+	cout <<setw(10)<< "  @@@@@@@@@@" <<endl;
+    cout <<setw(ballPushDistance) <<" ";
+	cout <<setw(10)<< "  '@@@@@@@@'" <<endl;
+    cout <<setw(ballPushDistance) <<" ";
+	cout <<setw(10)<< "    '@@@@'" <<endl;
+
+
     return(0);
-    
 }
 
 
@@ -219,10 +247,12 @@ int ingameLogic(){//CHANUKA
 
 int main(){
     //gameFrame();
-    splashScreen();
-    while (!gameOver)//until gameOver game will run
+    //splashScreen();
+    gameDraw();
+
+    /*while (!gameOver)//until gameOver game will run
 	{
 		mainMenu();
 	}
-    return(0);
+    return(0);*/
 }
