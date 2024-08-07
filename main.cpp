@@ -6,6 +6,7 @@
 #include <cstdlib>         // For system()
 #include <fstream>         //File Handling
 #include <cstring>
+#include <conio.h> // Include the conio.h header for _kbhit() and _getch() (to control the ball accotding to inputs)
 using namespace std;
 
 
@@ -23,6 +24,16 @@ int mainMenuUserInput = 0;  //Store the users Input from thew Main Menu
 
 string valueStore;         //Used in File Read to get User Scores
 
+// Define directions using an enumeration (benaragama)
+enum eDirect
+{
+    STOP = 0,
+    UP,
+    DOWN
+};
+// Declare direction variable
+eDirect dir;
+
 
                                     // G L O B A L I Z E   A L L  F U N C T I O N S
 
@@ -33,7 +44,7 @@ void splashScreen();       //Splash Screen Design for the Game
 void creditsPage();        //Credits Page from main Menu
 int scoreFileReader();    //Reads the file used to store Scores
 void gameInstructions();   //Instruction Page for the game
-
+void input();// Function to handle keyboard input 
 
 
                                                     // F U N C T I O N S 
@@ -144,6 +155,34 @@ void gameInstructions(){
     returnToMainMenu();
 }
 
+// Function to handle keyboard input (benaragama)
+void input()
+{
+    if (_kbhit()) // Check if a key has been pressed
+    {
+        char key = _getch(); // Get the pressed key
+        switch (key) // Determine the action based on the key
+        {
+            case 'w':
+                dir = UP; // Move up
+                break;
+            case 's':
+                dir = DOWN; // Move down
+                break;
+            default:
+                break; // Do nothing for other keys
+        }
+        // Clear the input buffer to avoid multiple triggers from the same key press
+        while (_kbhit())
+        {
+            key = _getch();
+        }
+    }
+    else
+    {
+        dir = STOP; // Stop movement if no key is pressed
+    }
+}
 
 
 
