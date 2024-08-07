@@ -256,14 +256,27 @@ void gameDraw() //CHANUKA
     cout << setw(ballPushDistance) << " ";
     cout << setw(10) << "    '@@@@'" << endl;
     
-    
+    for (int i = 0; i < moveUpDown; i++) {
+        cout << endl;
+    }
     //print the lower boundary
-    cout<<""<<endl;
     cout<<"888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888"<<endl;
     cout<<"888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888"<<endl;
     }
     else{
-        cout<<"Game over"<<endl;
+        cout<<endl;
+        cout<<endl;
+        cout<<endl;
+        cout<<endl;
+        cout<<endl;
+        cout<<endl;
+        cout<<"       gggggg                                                 oooo  "<<endl;        
+        cout<<"    ggg                                                     oooooo   "<<endl;    
+        cout<<"    gg     gggg      gggg     gg  gg   gg    ggggggg       oooooooooo     vv       vv  ggggggg  RR   RR   "<<endl;                                  
+        cout<<"    gg       gg    gggggg     ggg   ggg  gg  ee            oooooooooo      vv     vv   ee       RR  RR     "<<endl;                       
+        cout<<"    gg       gg    gggggg     gg    gg   gg  ggggggg       oooooooooo       vv   vv    ggggggg  RR RR     "<<endl;                               
+        cout<<"     gg      gg     ggggg     gg    gg   gg  ee              oooooo          vv vv     ee       RR       "<<endl;                       
+        cout<<"      ggggggggg      ggggggg  gg    gg   gg  ggggggg          oooo            vv       ggggggg  RR        "<<endl;                            
     }
     
 
