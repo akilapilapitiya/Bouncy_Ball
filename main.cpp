@@ -119,7 +119,8 @@ void splashScreen(){//AKILA
 
 void creditsPage(){//AKILA
     system("cls");
-    cout << "Team Details" << endl;
+    cout << "Ball Bounce" << endl;
+    cout << ""
     returnToMainMenu(); 
 }
 
