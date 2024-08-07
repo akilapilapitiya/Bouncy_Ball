@@ -41,7 +41,8 @@ void splashScreen();       //Splash Screen Design for the Game
 void creditsPage();        //Credits Page from main Menu
 int scoreFileReader();     //Reads the file used to store Scores
 void gameInstructions();   //Instruction Page for the game
-void input();              // Function to handle keyboard input 
+void input();              // Function to handle keyboard input
+int ingameLogic();         //Control newgame Functions 
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
@@ -64,10 +65,10 @@ void gameFrame(){//AKILA
 int mainMenu(){//AKILA
     system("cls");
     cout << "Game Menu" << endl;
-    cout << "1 - New Game \n2 - Scores \n3 - Instructions \n4 - Credits \n5 - Exit ";
+    cout << "1 - New Game \n 2 - Scores \n3 - Instructions \n4 - Credits \n5 - Exit ";
     cin >> mainMenuUserInput;
     switch(mainMenuUserInput){
-        case (1): cout << "Hello";              //New Game Connection
+        case (1): ingameLogic();              //New Game Connection
         case (2): scoreFileReader();            //Score List Connection
         case (3): gameInstructions();           //Instruction Connection
         case (4): creditsPage();                //Credits Connection
@@ -187,6 +188,16 @@ void input(){//BENARAGAMA
         dir = STOP;                             // Stop movement if no key is pressed
     }
 }
+
+int ingameLogic(){//CHANUKA
+
+
+    return(0);
+    
+}
+
+
+
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
