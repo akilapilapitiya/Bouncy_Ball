@@ -30,6 +30,9 @@ enum eDirect
 eDirect dir;
 
 
+bool gameOver;//check whether game is ended or not(Chanuka)
+int moveUp;
+int moveDown;//moving ball upwards and dawnwards
 //----------------------------------------------------------------------------------------------------------------------------------------------
 
                                     // G L O B A L I Z E   A L L  F U N C T I O N S
@@ -192,6 +195,18 @@ void input(){//BENARAGAMA
 int ingameLogic(){//CHANUKA
 
 
+    switch (dir)
+    {
+    case UP:                    //Move up
+        moveUp++;
+        break;
+    case DOWN:                  //Move down
+        moveDown++;
+        break;
+    default:
+        break;
+    }
+
     return(0);
     
 }
@@ -205,5 +220,9 @@ int ingameLogic(){//CHANUKA
 int main(){
     //gameFrame();
     splashScreen();
+    while (!gameOver)//until gameOver game will run
+	{
+		mainMenu();
+	}
     return(0);
 }
