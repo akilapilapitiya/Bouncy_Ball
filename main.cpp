@@ -31,8 +31,8 @@ eDirect dir;
 
 
 bool gameOver;      //check whether game is ended or not(Chanuka)
-int moveUp;         //moving ball upwards
-int moveDown;       //moving ball downwards
+int moveUpDown =10;         //moving ball upwards and downwards
+
 //----------------------------------------------------------------------------------------------------------------------------------------------
 
                                     // G L O B A L I Z E   A L L  F U N C T I O N S
@@ -45,8 +45,9 @@ void creditsPage();        //Credits Page from main Menu
 int scoreFileReader();     //Reads the file used to store Scores
 void gameInstructions();   //Instruction Page for the game
 void input();              // Function to handle keyboard input
-int ingameLogic();         //Control newgame Functions 
-int gameDraw();            //Draw the Game
+void ingameLogic();         //Control newgame Functions 
+void gameDraw();            //Draw the Game
+void gameSetup();           //basic setup of the game
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
@@ -203,40 +204,49 @@ void input(){//BENARAGAMA
 
 
 
-int ingameLogic(){//CHANUKA
-    switch (dir)
-    {
-    case UP:                    //Move up
-        moveUp++;
-        break;
-    case DOWN:                  //Move down
-        moveDown++;
-        break;
-    default:
-        break;
+void ingameLogic()//CHANUKA
+ {
+    switch (dir) {
+        case UP:                           // Move up
+            moveUpDown--;
+            break;
+        case DOWN:                         // Move down
+            moveUpDown++;
+            break;
+        default:
+            break;
     }
-
-    return(0);    
 }
 
 
-int gameDraw(){//CHANUKA
-
+void gameDraw() //CHANUKA
+{
     int ballPushDistance = 20;
+    system("cls");  // Clear the screen
 
-    cout <<setw(ballPushDistance) <<" ";
-    cout << setw(10)<< "   ,@@@@," <<endl;
-    cout <<setw(ballPushDistance) <<" ";
-	cout <<setw(10)<< "  ,@@@@@@@@," <<endl;
-    cout <<setw(ballPushDistance) <<" ";
-	cout <<setw(10)<< "  @@@@@@@@@@" <<endl;
-    cout <<setw(ballPushDistance) <<" ";
-	cout <<setw(10)<< "  '@@@@@@@@'" <<endl;
-    cout <<setw(ballPushDistance) <<" ";
-	cout <<setw(10)<< "    '@@@@'" <<endl;
+    for (int i = 0; i < moveUpDown; i++) {
+        cout << endl;
+    }
 
+    cout << setw(ballPushDistance) << " ";
+    cout << setw(10) << "   ,@@@@," << endl;
+    cout << setw(ballPushDistance) << " ";
+    cout << setw(10) << "  ,@@@@@@@@," << endl;
+    cout << setw(ballPushDistance) << " ";
+    cout << setw(10) << "  @@@@@@@@@@" << endl;
+    cout << setw(ballPushDistance) << " ";
+    cout << setw(10) << "  '@@@@@@@@'" << endl;
+    cout << setw(ballPushDistance) << " ";
+    cout << setw(10) << "    '@@@@'" << endl;
 
-    return(0);
+    this_thread::sleep_for(chrono::milliseconds(100)); // Introduce a delay of 100 milliseconds
+    
+}
+
+void gameSetup()//CHANUKA
+{
+	gameOver = false;
+	dir = STOP;
 }
 
 
@@ -248,11 +258,11 @@ int gameDraw(){//CHANUKA
 int main(){
     //gameFrame();
     //splashScreen();
-    gameDraw();
-
-    /*while (!gameOver)//until gameOver game will run
-	{
-		mainMenu();
-	}
-    return(0);*/
+    
+    while (!gameOver) {
+        input();         // Get user input
+        ingameLogic();   // Update game logic based on input
+        gameDraw();      // Draw the game
+    }
+    
 }
