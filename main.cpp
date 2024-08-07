@@ -24,7 +24,7 @@ int mainMenuUserInput = 0;  //Store the users Input from thew Main Menu
 
 string valueStore;         //Used in File Read to get User Scores
 
-// Define directions using an enumeration (benaragama)
+// Define directions using an enumeration (benaragamaa)
 enum eDirect
 {
     STOP = 0,
