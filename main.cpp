@@ -30,9 +30,11 @@ enum eDirect
 eDirect dir;
 
 
-bool gameOver;      //check whether game is ended or not(Chanuka)
+bool gameOver;              //check whether game is ended or not(Chanuka)
 int moveUpDown =10;         //moving ball upwards and downwards
+int score = 0;              //variable for score
 
+chrono::time_point<chrono::steady_clock> lastScoreUpdate = chrono::steady_clock::now();
 //----------------------------------------------------------------------------------------------------------------------------------------------
 
                                     // G L O B A L I Z E   A L L  F U N C T I O N S
@@ -216,17 +218,32 @@ void ingameLogic()//CHANUKA
         default:
             break;
     }
+    // Update score every second
+    auto now = chrono::steady_clock::now();
+    auto duration = chrono::duration_cast<chrono::seconds>(now - lastScoreUpdate);
+    if (duration.count() >= 1) {
+        score += 10;
+        lastScoreUpdate = now;
+    }
+
 }
 
 
 void gameDraw() //CHANUKA
-{
+{   
+    
+    
     int ballPushDistance = 20;
-    system("cls");  // Clear the screen
-
+    system("cls");                            // Clear the screen
+    if(moveUpDown>-1 && moveUpDown <20)       //print the upper boundary
+    {
+    cout<<"888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888"<<endl;
+    cout<<"888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888"<<endl;
+    
     for (int i = 0; i < moveUpDown; i++) {
         cout << endl;
     }
+    
 
     cout << setw(ballPushDistance) << " ";
     cout << setw(10) << "   ,@@@@," << endl;
@@ -238,10 +255,22 @@ void gameDraw() //CHANUKA
     cout << setw(10) << "  '@@@@@@@@'" << endl;
     cout << setw(ballPushDistance) << " ";
     cout << setw(10) << "    '@@@@'" << endl;
-
-    this_thread::sleep_for(chrono::milliseconds(100)); // Introduce a delay of 100 milliseconds
     
+    
+    //print the lower boundary
+    cout<<""<<endl;
+    cout<<"888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888"<<endl;
+    cout<<"888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888"<<endl;
+    }
+    else{
+        cout<<"Game over"<<endl;
+    }
+    
+
+   this_thread::sleep_for(chrono::milliseconds(100)); // Introduce a delay of 100 milliseconds
+
 }
+
 
 void gameSetup()//CHANUKA
 {
@@ -256,9 +285,10 @@ void gameSetup()//CHANUKA
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 
 int main(){
+
     //gameFrame();
     //splashScreen();
-    
+    gameSetup();
     while (!gameOver) {
         input();         // Get user input
         ingameLogic();   // Update game logic based on input
