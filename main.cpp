@@ -235,15 +235,9 @@ void gameDraw() //CHANUKA
     
     int ballPushDistance = 20;
     system("cls");                            // Clear the screen
-    if(moveUpDown>-1 && moveUpDown <20)       //print the upper boundary
-    {
-    cout<<"888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888"<<endl;
-    cout<<"888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888"<<endl;
-    
-    for (int i = 0; i < moveUpDown; i++) {
-        cout << endl;
+    for(int i;i<moveUpDown;i++){
+        cout<<endl;
     }
-    
 
     cout << setw(ballPushDistance) << " ";
     cout << setw(10) << "   ,@@@@," << endl;
@@ -256,28 +250,8 @@ void gameDraw() //CHANUKA
     cout << setw(ballPushDistance) << " ";
     cout << setw(10) << "    '@@@@'" << endl;
     
-    for (int i = 0; i < moveUpDown; i++) {
-        cout << endl;
-    }
-    //print the lower boundary
-    cout<<"888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888"<<endl;
-    cout<<"888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888"<<endl;
-    }
-    else{
-        cout<<endl;
-        cout<<endl;
-        cout<<endl;
-        cout<<endl;
-        cout<<endl;
-        cout<<endl;
-        cout<<"       gggggg                                                 oooo  "<<endl;        
-        cout<<"    ggg                                                     oooooooo   "<<endl;    
-        cout<<"    gg     gggg      gggg     gg  gg   gg    ggggggg       oo      oo     vv       vv  ggggggg  RR   RR   "<<endl;                                  
-        cout<<"    gg       gg    gggggg     ggg   ggg  gg  ee            oo      oo      vv     vv   ee       RR  RR     "<<endl;                       
-        cout<<"    gg       gg    gggggg     gg    gg   gg  ggggggg       oo      oo       vv   vv    ggggggg  RR RR     "<<endl;                               
-        cout<<"     gg      gg     ggggg     gg    gg   gg  ee             oooooooo         vv vv     ee       RR       "<<endl;                       
-        cout<<"      ggggggggg      ggggggg  gg    gg   gg  ggggggg          oooo            vv       ggggggg  RR        "<<endl;                            
-    }
+    
+   
     
 
    this_thread::sleep_for(chrono::milliseconds(100)); // Introduce a delay of 100 milliseconds
