@@ -113,6 +113,7 @@ void input();              //Function to handle keyboard input
 void keyBoardLogic();      //Function to bind ingame Actions with Keyboard logics
 int gameDraw();           //Draw the Game in all Instances
 void ballFall();          //Make the Ball Fall Down
+void gameOverDisplay();   //Game Over Prompt with menu Includes
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
@@ -238,7 +239,7 @@ void gameInstructions(){//AKILA
 
 
 //Function to Initialize the Game
-int gameInitialize(){
+int gameInitialize(){//AKILA
     //Draw an interface to Get users Name
     // Input User name to store marks
     //On completion, call the game logic system
@@ -303,7 +304,7 @@ void input(){//BENARAGAMA
 }
 
 //FUNCTION to control logic with keyboard Inputs
-void keyBoardLogic(){
+void keyBoardLogic(){//CHANUKA
     if(ballPositionFromTop > maximumHeightTheBallCanMoveConstant){
         switch (dir) {
             case UP:                           // Move up
@@ -315,7 +316,7 @@ void keyBoardLogic(){
 }
 
 //FUNCTION to draw the game in all 3 Instances
-int gameDraw(){
+int gameDraw(){//AKILA
     //When the obstacle is in right of the ball
     if (dynamicDistanceAdjust > 0){
         for(int i = 0; i < gameBodyHeightConstant; i++){
@@ -338,9 +339,8 @@ int gameDraw(){
     if(dynamicDistanceAdjust == 0){
         //Collsion Exit
         if((ballPositionFromTop > 12) && (dynamicDistanceAdjustNegetive == 30)){
-            cout << "collision";
             gameOverStatus = true;
-            return(0);
+            gameOverDisplay();
         }
         ///To be changed
         if((ballPositionFromTop > 12) && (dynamicDistanceAdjustNegetive != 30)){
@@ -383,7 +383,7 @@ int gameDraw(){
 }
 
 //FUNCTION to make the ball Fall Down
-void ballFall(){
+void ballFall(){//AKILA
     if(ballPositionFromTop >= 16){
     }else{
         ballPositionFromTop += ballFallRateConstant;
@@ -391,7 +391,11 @@ void ballFall(){
 
 }
 
+//FUNCTION to act in Game Over Instance
+void gameOverDisplay(){//AKILA
+    cout << "game Over";
 
+}
 
 
 
