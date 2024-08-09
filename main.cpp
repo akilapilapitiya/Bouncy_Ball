@@ -6,6 +6,7 @@
 #include <cstdlib>         // For system()
 #include <fstream>         //File Handling
 #include <string>         //String Manipulations
+#include <sstream>          //File handling brak of characters
 #include <conio.h>         //for _kbhit() and _getch() (to control the ball according to inputs)
 using namespace std;
 
@@ -127,6 +128,7 @@ void keyBoardLogic();                   //Function to bind ingame Actions with K
 int gameDraw();                         //Draw the Game in all Instances
 void ballFall();                        //Make the Ball Fall Down
 void gameOverDisplay();                 //Game Over Prompt with menu Includes
+int dataWriteFunction();               //Function to write the user data to the file
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
@@ -156,7 +158,7 @@ int mainMenu(){//AKILA
         case (2): scoreFileReader();            //Score List Connection
         case (3): gameInstructions();           //Instruction Connection
         case (4): creditsPage();                //Credits Connection
-        case (5): break;                        //Exit Connection
+        case (5): return(0);                        //Exit Connection
         default:
             cout << "Enter a valid Input" << endl; 
             cin >> mainMenuUserInput;       
@@ -233,6 +235,7 @@ int scoreFileReader(){//AKILA
         cout << "Error In Opening the File";    //Statement if the file is not open
         return(0);                              //Exit program if file is not open
     }
+    
     readFile.close();                           //Close file reader
     returnToMainMenu();                         //Connection to main menu function
     return(0);                                  //Useless return for code completemess
@@ -427,9 +430,27 @@ void gameOverDisplay(){//AKILA
     system("cls");
     cout << "game Over" << endl;
     cout << "Your Score is: " << gameScore;
+    dataWriteFunction();            //Call Function to Write the data to the file
+    gameVariableResetFunction();    //Call Function to Reset All Dynamic Data
+    returnToMainMenu();             //Call Function to Return to main Menu
+
+
 
 }
 
+// FUNCTION to save user data and Scores 
+int dataWriteFunction(){
+    fstream fileWriter;
+    fileWriter.open("score.txt", ios::app);
+    if(!fileWriter.is_open()){
+        cout << "Error in opening the file " << endl;
+        return(0);    
+    }
+    fileWriter << playerName << "," << gameScore;
+    fileWriter << endl;
+    fileWriter.close();
+    return(0);
+}
 
 
 
@@ -441,8 +462,8 @@ void gameOverDisplay(){//AKILA
 int main(){
 
     //gameFrame();
-    //splashScreen();
-    gameInitialize();
+    splashScreen();
+    //gameInitialize();
 
    return (0); 
 }
