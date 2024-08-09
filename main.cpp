@@ -13,16 +13,16 @@ using namespace std;
 
 //                                            G L O B A L   C O N S T A N T S
 // GAME RELATED  DIMENSION
-const int frameWidthConstant = 100;             //Game Frame Width Dimensions
-const int frameHeightConstant = 25;             //Game Frame Height Dimensions
-const int gameBodyHeightConstant = 23;  //Height of play area including the floor   
-const int ballHeightConstant = 5;       //Height of the Ball
-const int ballIdlePositionFromTop = 18; //At game start the ball is draw under this number of lines
-const int obstaclePositionFromTopConstant = 19; //All throughout the game obstacle start draw after these number of lines
+const int frameWidthConstant = 100;                 //Game Frame Width Dimensions
+const int frameHeightConstant = 25;                 //Game Frame Height Dimensions
+const int gameBodyHeightConstant = 23;              //Height of play area including the floor   
+const int ballHeightConstant = 5;                   //Height of the Ball
+const int ballIdlePositionFromTop = 18;             //At game start the ball is draw under this number of lines
+const int obstaclePositionFromTopConstant = 19;     //All throughout the game obstacle start draw after these number of lines
 
-const int ballPositionFromLeftConstant = 20;   //Distance to the ball From the left wall
-const int ballWidthConstant = 10;              //Width of the ball
-const int obstacleWidthConstant = 7;           //Width of the Obstacle
+const int ballPositionFromLeftConstant = 20;        //Distance to the ball From the left wall
+const int ballWidthConstant = 10;                   //Width of the ball
+const int obstacleWidthConstant = 7;                //Width of the Obstacle
 
 
 //GAME RELATED
@@ -40,21 +40,35 @@ string drawObstacle[] = {"   A   ",    //drawObstacle[0]
                          " AAAAA ",    //drawObstacle[2]
                          "AAAAAAA"};   //drawObstacle[3]
 
-const bool gameOverStatusConstant = false;    //Game over status set to false by Default
-const int sleepTimeConstant = 300;            //Ingame Console Refresh time in milli seconds
-const int obstacleMoveRate = 4;               //Rate at which the obstacle Moves to left
+//Game Draw related Constants
+const bool gameOverStatusConstant = false;              //Game over status set to false by Default
+const int sleepTimeConstant = 300;                      //Ingame Console Refresh time in milli seconds
+const int obstacleMoveRate = 4;                         //Rate at which the obstacle Moves to left
 
-
+//Obstacle and Ball draw RESET constants
 const int dynamicDistanceAdjustConstant = 60;           //Initial Distance Between the Ball and Obstacle
 const int ballPositionFromTopConstant = 17;             //At startup Ball Position   DEFAULT :: 17 (do not exceed)
 const int dynamicDistanceAdjustNegetiveConstant = 30;   //Initial Distance between left wall and the obstacle when dynamicDistanceAdjust == 0
 
 
-
+//Ball Related Controls
 const int maximumHeightTheBallCanMoveConstant = 2;      //Maximum height the ball is allowed to move
 const int ballMoveUpToKeyPressConstant = 3;             //With each Keypress number of lines the ball moves up 
-
 const int ballFallRateConstant = 2;                     //Rate in which the ball falls down
+
+
+//Player Management and Score Maps
+const int gameScoreIncrementConstant = 1;               //Increment of score for avoiding a single Obstacle
+const int gameScoreReset = 0;                           //Reset Value for the Game Score
+const string playerNameReset = "";                      //Reset Value for Player name
+const int numberOfPlayersExpectedConstant = 10;         //Size of the playerStatArray
+
+//Global Structure named playerStats
+struct playerStats{
+    string playerName;
+    int playerScore;
+};
+struct playerStats playerStatArray[numberOfPlayersExpectedConstant];    //Assign the Structure to an array for data storing
 
 
 //------------------------------------------------------------------------------------------------------------------
@@ -78,19 +92,17 @@ enum eDirect{
 // Declare direction variable
 eDirect dir;
 
+// Game draw related dynamic Variables
 bool gameOverStatus;                //Variable to store the game over status
 int dynamicDistanceAdjust;          //Variable to store Distance between Ball and Obstacle
 int ballPositionFromTop;            //Variable to store Position of the ball Fram top         
 int dynamicDistanceAdjustNegetive;  //Variable to store the distancve between left wall and the obstacle when dynamicDistanceAdjust == 0
 
+//Player Management and Score Maps
+int gameScore; 
+string playerName;
 
 
-
-
-
-bool gameOver;              //check whether game is ended or not(Chanuka)
-
-chrono::time_point<chrono::steady_clock> lastScoreUpdate = chrono::steady_clock::now();
 //----------------------------------------------------------------------------------------------------------------------------------------------
 
 //                                  G L O B A L I Z E   A L L  F U N C T I O N S
@@ -108,19 +120,20 @@ void gameInstructions();   //Instruction Page for the game
 
 
 //GAME LOGIC RELATED
-int gameInitialize();      //main Menu Connect for new Game
-void input();              //Function to handle keyboard input
-void keyBoardLogic();      //Function to bind ingame Actions with Keyboard logics
-int gameDraw();           //Draw the Game in all Instances
-void ballFall();          //Make the Ball Fall Down
-void gameOverDisplay();   //Game Over Prompt with menu Includes
+int gameInitialize();                   //main Menu Connect for new Game
+void gameVariableResetFunction();       //Resets all variable Data for a new Game
+void input();                           //Function to handle keyboard input
+void keyBoardLogic();                   //Function to bind ingame Actions with Keyboard logics
+int gameDraw();                         //Draw the Game in all Instances
+void ballFall();                        //Make the Ball Fall Down
+void gameOverDisplay();                 //Game Over Prompt with menu Includes
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
 
 //                                M E N U   R E L A T E D   F U N C T I O N S 
 
-// FUNCTION to draw the game Frame (Inputs defined: GLOBAL frameWidth, GLOBAL frameHeight)                                                    
+// FUNCTION to draw the game Frame                  (Inputs defined: GLOBAL frameWidthConstant, GLOBAL frameHeightConstant)                                                    
 void gameFrame(){//AKILA
     for(int i = 0; i < frameWidthConstant; i++) cout <<"-";
     cout << endl;
@@ -132,7 +145,7 @@ void gameFrame(){//AKILA
     for(int k = 0; k < frameWidthConstant; k++) cout <<"-";
 }
 
-// FUNCTION to display and configure the main menu (Inputs taken from user to GLOBAL mainMenuUserInput)
+// FUNCTION to display and configure the main menu  (Inputs taken from user to GLOBAL mainMenuUserInput)
 int mainMenu(){//AKILA
     system("cls");
     cout << "Game Menu" << endl;
@@ -151,7 +164,7 @@ int mainMenu(){//AKILA
     return(0);
 }
 
-//FUNCTION to handle the returns from the main menu (Inputs taken from user to GLOBAL mainMenuUserInput)
+//FUNCTION to handle the returns from the main menu     (Inputs taken from user to GLOBAL mainMenuUserInput)
 void returnToMainMenu(){//AKILA
     cout << "\n";
     cout << "Enter 0 to return to main Menu" ;
@@ -240,15 +253,18 @@ void gameInstructions(){//AKILA
 
 //Function to Initialize the Game
 int gameInitialize(){//AKILA
+
+    //Call the reset Function
+    gameVariableResetFunction();
+    
     //Draw an interface to Get users Name
     // Input User name to store marks
     //On completion, call the game logic system
+    cout << "Enter Player Name: ";
+    cin >> playerName;
+    system("cls");
 
-    //New Game Resets
-    gameOverStatus = gameOverStatusConstant;                    // Preset the Game Over Status
-    dynamicDistanceAdjust = dynamicDistanceAdjustConstant;      //Reset the Dynamic Distance Adjust for new Game
-    ballPositionFromTop = ballPositionFromTopConstant;          //Reset the Position of the ball From the top
-    dynamicDistanceAdjustNegetive = dynamicDistanceAdjustNegetiveConstant;   //Reset the Dynamic Distance Adjust Negetive for new Game
+
 
     //Game loop
     while(!gameOverStatus){
@@ -263,19 +279,34 @@ int gameInitialize(){//AKILA
         keyBoardLogic();                                                    //Call the keyboard logic function
         ballFall();                                             //Call the Function to make the Ball Fall
 
-        //Conditions to loop the game
+        //Conditions to loop the game and Mark the scores
         if((dynamicDistanceAdjust == 0) && (dynamicDistanceAdjustNegetive == 2)){
-            dynamicDistanceAdjust = dynamicDistanceAdjustConstant;
-            dynamicDistanceAdjustNegetive = dynamicDistanceAdjustNegetiveConstant;
+            dynamicDistanceAdjust = dynamicDistanceAdjustConstant;                 //Reset dynamicDistanceAdjust to default
+            dynamicDistanceAdjustNegetive = dynamicDistanceAdjustNegetiveConstant; //Reset dynamicDistanceAdjustNegetive to default
+            gameScore += gameScoreIncrementConstant;                               //Increment the Game Score by desires
         }
         system("cls");                                          //Refresh the Console
-
-
     }
+    gameOverDisplay();                                          //Call the game Over Function
     return(0);
 }
 
-// FUNCTION to handle keyboard input (BENARAGAMA)
+//FUNCTION to reset variables to a new game
+void gameVariableResetFunction(){
+    //New Game Resets
+    gameOverStatus = gameOverStatusConstant;                    // Preset the Game Over Status
+
+    dynamicDistanceAdjust = dynamicDistanceAdjustConstant;      //Reset the Dynamic Distance Adjust for new Game
+    ballPositionFromTop = ballPositionFromTopConstant;          //Reset the Position of the ball From the top
+    dynamicDistanceAdjustNegetive = dynamicDistanceAdjustNegetiveConstant;   //Reset the Dynamic Distance Adjust Negetive for new Game
+
+    //Player Info Resets
+    playerName = playerNameReset;                   //Reset thePlayer Name to NULL
+    gameScore = gameScoreReset;                     //Reset the game score to 0
+
+}
+
+// FUNCTION to handle keyboard input
 void input(){//BENARAGAMA
     if (_kbhit())                               // Check if a key has been pressed
     {
@@ -321,7 +352,7 @@ int gameDraw(){//AKILA
     if (dynamicDistanceAdjust > 0){
         for(int i = 0; i < gameBodyHeightConstant; i++){
             if(i > ballPositionFromTop){
-                if((i - (ballPositionFromTop)) < ballHeightConstant){
+                if((i - (ballPositionFromTop)) <= ballHeightConstant){
                     cout << left << setw(ballPositionFromLeftConstant) << "" << setw(ballWidthConstant) << drawBall[i - (ballPositionFromTop + 1)];   
                 }else{
                     cout << left << setw(ballPositionFromLeftConstant + ballWidthConstant) << "";
@@ -339,8 +370,8 @@ int gameDraw(){//AKILA
     if(dynamicDistanceAdjust == 0){
         //Collsion Exit
         if((ballPositionFromTop > 12) && (dynamicDistanceAdjustNegetive == 30)){
-            gameOverStatus = true;
-            gameOverDisplay();
+            gameOverStatus = true;                  //Since there is a collision change game over bool value to true
+            return(0);                              //Break the function
         }
         ///To be changed
         if((ballPositionFromTop > 12) && (dynamicDistanceAdjustNegetive != 30)){
@@ -393,7 +424,9 @@ void ballFall(){//AKILA
 
 //FUNCTION to act in Game Over Instance
 void gameOverDisplay(){//AKILA
-    cout << "game Over";
+    system("cls");
+    cout << "game Over" << endl;
+    cout << "Your Score is: " << gameScore;
 
 }
 
