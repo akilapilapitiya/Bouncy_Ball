@@ -128,7 +128,11 @@ void keyBoardLogic();                   //Function to bind ingame Actions with K
 int gameDraw();                         //Draw the Game in all Instances
 void ballFall();                        //Make the Ball Fall Down
 void gameOverDisplay();                 //Game Over Prompt with menu Includes
-int dataWriteFunction();               //Function to write the user data to the file
+int dataWriteFunction();                //Function to write the user data to the file
+
+//DRAW FUNCTIONS
+void splashScreenDraw();                //Slash Screen Design
+
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
@@ -153,12 +157,13 @@ int mainMenu(){//AKILA
     cout << "Game Menu" << endl;
     cout << "1 - New Game \n 2 - Scores \n3 - Instructions \n4 - Credits \n5 - Exit ";
     cin >> mainMenuUserInput;
+
     switch(mainMenuUserInput){
         case (1): gameInitialize();                //New Game Connection
         case (2): scoreFileReader();            //Score List Connection
         case (3): gameInstructions();           //Instruction Connection
         case (4): creditsPage();                //Credits Connection
-        case (5): return(0);                        //Exit Connection
+        case (5): break  ;                            //Exit Connection
         default:
             cout << "Enter a valid Input" << endl; 
             cin >> mainMenuUserInput;       
@@ -184,33 +189,7 @@ void returnToMainMenu(){//AKILA
 void splashScreen(){//AKILA
     for(int i = 0; i < frameWidthConstant; i++) cout <<"-";
     cout << endl;
-    
-    cout << "                                                                                                  " << endl;
-    cout << "       BTTTTTTTTTTTTb                        BALl     EBAl                                        " << endl;
-    cout << "       BALLBOUNCEBALLBb                      BALl     EBAl                                        " << endl;
-    cout << "       BALl        )LBOb                     BALl     EBAl                                        " << endl;
-    cout << "       BALl       )LLBOp                     BALl     EBAl                                        " << endl;
-    cout << "       BALLBOUNCEBALLp      TTOTTTTDT0       BALl     EBAl                                        " << endl;
-    cout << "       BALLBOUNCEBALLb      LBBALLBOUNl      BALl     EBAl                                        " << endl;
-    cout << "       BALl       )LLBOb            UNl      BALl     EBAl                                        " << endl;
-    cout << "       BALl        )LBOU    LBBALLBOUNl      BALl     EBAl                                        " << endl;
-    cout << "       BALLBOUNCEBALLBOp    LBB     UNl      BALb     EBAb                                        " << endl;
-    cout << "       BALLBOUNCEBALLB0     LBBALLBOUNC0     BALBl    EBALl                                       " << endl;
-    cout << "                                                                                                  " << endl;
-    cout << "                                                                                                  " << endl;
-    cout << "       BALLBOUNCEBALb                                                                             " << endl;
-    cout << "       BALLBOUNCEBALLBb                                                                           " << endl;
-    cout << "       BALL         LBOb                                                                          " << endl;
-    cout << "       BALL        LLBOp                             LLBO0                                        " << endl;
-    cout << "       BALLBOUNCEBALLp     LLBBALLBOU   BALl    LLBl   lCE0 0LBBA     NCEBALLBBA    UNCEBALLBB0   " << endl;
-    cout << "       BALLBOUNCEBALLb    lLLB    BOUN  BALl    LLBl   lCEBALLBBALl   UNCE   LBBA   OUN     LBBl  " << endl;
-    cout << "       BALL        LLBOb  lLLB    BOUN  BALl    LLBl   lCEB    BALl   UNC           OUN     LBB0  " << endl;
-    cout << "       BALL         LBOU  lLLB    BOUN  BALl    LLBl   lCEB    BALl   UNC           OUNCEBALLB0   " << endl;
-    cout << "       BALLBOUNCEBALLBOp  lLLB   LBOUN  BALL0  ALLBl   lCEB    BALl   UNCE   LBBA   OUN0          " << endl;
-    cout << "       BALLBOUNCEBALLBp    0LBBALLBOU    0ALLBBALL0    lCEB    BALl    NCEBALLBBA    UNCEBALLBB   " << endl;
-    cout << "                                                                                                  " << endl;
-    cout << "                                                                                                  " << endl;
-
+    splashScreenDraw();
     for(int k = 0; k < frameWidthConstant; k++) cout <<"-";
     this_thread::sleep_for(chrono::seconds(splashScreenRefresh));    //sleep console for specified time
     mainMenu();                                                      //link to mainMenu Function
@@ -412,6 +391,10 @@ int gameDraw(){//AKILA
     }
     //Draw the Game Floor
     for (int i = 0; i < frameWidthConstant; i++)cout << "-";
+    cout << endl;
+
+    //Game Score Display
+    cout << "SCORE: " << gameScore;
 
     return(0);
 }
@@ -466,4 +449,35 @@ int main(){
     //gameInitialize();
 
    return (0); 
+}
+
+
+
+
+void splashScreenDraw(){
+    cout << "                                                                                                  " << endl;
+    cout << "       BTTTTTTTTTTTTb                        BALl     EBAl                                        " << endl;
+    cout << "       BALLBOUNCEBALLBb                      BALl     EBAl                                        " << endl;
+    cout << "       BALl        )LBOb                     BALl     EBAl                                        " << endl;
+    cout << "       BALl       )LLBOp                     BALl     EBAl                                        " << endl;
+    cout << "       BALLBOUNCEBALLp      TTOTTTTDT0       BALl     EBAl                                        " << endl;
+    cout << "       BALLBOUNCEBALLb      LBBALLBOUNl      BALl     EBAl                                        " << endl;
+    cout << "       BALl       )LLBOb            UNl      BALl     EBAl                                        " << endl;
+    cout << "       BALl        )LBOU    LBBALLBOUNl      BALl     EBAl                                        " << endl;
+    cout << "       BALLBOUNCEBALLBOp    LBB     UNl      BALb     EBAb                                        " << endl;
+    cout << "       BALLBOUNCEBALLB0     LBBALLBOUNC0     BALBl    EBALl                                       " << endl;
+    cout << "                                                                                                  " << endl;
+    cout << "                                                                                                  " << endl;
+    cout << "       BALLBOUNCEBALb                                                                             " << endl;
+    cout << "       BALLBOUNCEBALLBb                                                                           " << endl;
+    cout << "       BALL         LBOb                                                                          " << endl;
+    cout << "       BALL        LLBOp                             LLBO0                                        " << endl;
+    cout << "       BALLBOUNCEBALLp     LLBBALLBOU   BALl    LLBl   lCE0 0LBBA     NCEBALLBBA    UNCEBALLBB0   " << endl;
+    cout << "       BALLBOUNCEBALLb    lLLB    BOUN  BALl    LLBl   lCEBALLBBALl   UNCE   LBBA   OUN     LBBl  " << endl;
+    cout << "       BALL        LLBOb  lLLB    BOUN  BALl    LLBl   lCEB    BALl   UNC           OUN     LBB0  " << endl;
+    cout << "       BALL         LBOU  lLLB    BOUN  BALl    LLBl   lCEB    BALl   UNC           OUNCEBALLB0   " << endl;
+    cout << "       BALLBOUNCEBALLBOp  lLLB   LBOUN  BALL0  ALLBl   lCEB    BALl   UNCE   LBBA   OUN0          " << endl;
+    cout << "       BALLBOUNCEBALLBp    0LBBALLBOU    0ALLBBALL0    lCEB    BALl    NCEBALLBBA    UNCEBALLBB   " << endl;
+    cout << "                                                                                                  " << endl;
+    cout << "                                                                                                  " << endl;
 }
