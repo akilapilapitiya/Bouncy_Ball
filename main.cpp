@@ -1,44 +1,102 @@
-                                            // L I B R A R Y   I M P O R T S
+//                                              L I B R A R Y   I M P O R T S
 #include <iostream> 
 #include <iomanip>         //Outputs adjustments
 #include <thread>          //For Code Sleep
 #include <chrono>          //To make the code sleep
 #include <cstdlib>         // For system()
 #include <fstream>         //File Handling
-#include <cstring>         //String Manipulations
-#include <conio.h>         // Include the conio.h header for _kbhit() and _getch() (to control the ball accotding to inputs)
+#include <string>         //String Manipulations
+#include <conio.h>         //for _kbhit() and _getch() (to control the ball according to inputs)
 using namespace std;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------
 
-                                            // G L O B A L   V A R I A B L E S 
+//                                            G L O B A L   C O N S T A N T S
+// GAME RELATED  DIMENSION
+const int frameWidthConstant = 100;             //Game Frame Width Dimensions
+const int frameHeightConstant = 25;             //Game Frame Height Dimensions
+const int gameBodyHeightConstant = 23;  //Height of play area including the floor   
+const int ballHeightConstant = 5;       //Height of the Ball
+const int ballIdlePositionFromTop = 18; //At game start the ball is draw under this number of lines
+const int obstaclePositionFromTopConstant = 19; //All throughout the game obstacle start draw after these number of lines
 
-const int frameWidth = 100;     //Game Frame Width Dimensions
-const int frameHeight = 25;     //Game Frame Height Dimensions
-int splashScreenRefresh = 4;    //Duration of the Splash Screen 
+const int ballPositionFromLeftConstant = 20;   //Distance to the ball From the left wall
+const int ballWidthConstant = 10;              //Width of the ball
+const int obstacleWidthConstant = 7;           //Width of the Obstacle
+
+
+//GAME RELATED
+
+//Ball Draw Array
+string drawBall[] = {"  ,@@@@,  ",     //drawBall[0]
+                     ",@@@@@@@@,",     //drawBall[1]
+                     "@@@@@@@@@@",     //drawBall[2]
+                     "'@@@@@@@@'",     //drawBall[3]
+                     "  '@@@@'  "};    //drawBall[4]
+
+//Obstacle Draw Array
+string drawObstacle[] = {"   A   ",    //drawObstacle[0]
+                         "  AAA  ",    //drawObstacle[1]
+                         " AAAAA ",    //drawObstacle[2]
+                         "AAAAAAA"};   //drawObstacle[3]
+
+const bool gameOverStatusConstant = false;    //Game over status set to false by Default
+const int sleepTimeConstant = 300;            //Ingame Console Refresh time in milli seconds
+const int obstacleMoveRate = 4;               //Rate at which the obstacle Moves to left
+
+
+const int dynamicDistanceAdjustConstant = 60;           //Initial Distance Between the Ball and Obstacle
+const int ballPositionFromTopConstant = 17;             //At startup Ball Position   DEFAULT :: 17 (do not exceed)
+const int dynamicDistanceAdjustNegetiveConstant = 30;   //Initial Distance between left wall and the obstacle when dynamicDistanceAdjust == 0
+
+
+
+const int maximumHeightTheBallCanMoveConstant = 2;      //Maximum height the ball is allowed to move
+const int ballMoveUpToKeyPressConstant = 3;             //With each Keypress number of lines the ball moves up 
+
+const int ballFallRateConstant = 2;                     //Rate in which the ball falls down
+
+
+//------------------------------------------------------------------------------------------------------------------
+
+//                                            G L O B A L   V A R I A B L E S 
+// MENU RELATED
+int splashScreenRefresh = 4;    //Duration of the Splash Screen Sleep time
 int mainMenuUserInput = 0;      //Store the users Input from thew Main Menu
 string valueStore;              //Used in File Read to get User Scores
 
-// Define directions using an enumeration (BENARAGAMA)
-enum eDirect
-{
+
+//GAME RELATED
+
+// Keyboard Mapping Directions
+enum eDirect{
     STOP = 0,
     UP,
     DOWN
 };
+
 // Declare direction variable
 eDirect dir;
 
+bool gameOverStatus;                //Variable to store the game over status
+int dynamicDistanceAdjust;          //Variable to store Distance between Ball and Obstacle
+int ballPositionFromTop;            //Variable to store Position of the ball Fram top         
+int dynamicDistanceAdjustNegetive;  //Variable to store the distancve between left wall and the obstacle when dynamicDistanceAdjust == 0
+
+
+
+
+
 
 bool gameOver;              //check whether game is ended or not(Chanuka)
-int moveUpDown =10;         //moving ball upwards and downwards
-int score = 0;              //variable for score
 
 chrono::time_point<chrono::steady_clock> lastScoreUpdate = chrono::steady_clock::now();
 //----------------------------------------------------------------------------------------------------------------------------------------------
 
-                                    // G L O B A L I Z E   A L L  F U N C T I O N S
+//                                  G L O B A L I Z E   A L L  F U N C T I O N S
 
+
+// MENU RELATED
 void gameFrame();          //Draw the Game Frame
 int mainMenu();            //Main Menu Configurations
 void returnToMainMenu();   //Function to Return to the Main Menu from Menu Elements
@@ -46,26 +104,31 @@ void splashScreen();       //Splash Screen Design for the Game
 void creditsPage();        //Credits Page from main Menu
 int scoreFileReader();     //Reads the file used to store Scores
 void gameInstructions();   //Instruction Page for the game
-void input();              // Function to handle keyboard input
-void ingameLogic();         //Control newgame Functions 
-void gameDraw();            //Draw the Game
-void gameSetup();           //basic setup of the game
+
+
+
+//GAME LOGIC RELATED
+int gameInitialize();      //main Menu Connect for new Game
+void input();              //Function to handle keyboard input
+void keyBoardLogic();      //Function to bind ingame Actions with Keyboard logics
+int gameDraw();           //Draw the Game in all Instances
+void ballFall();          //Make the Ball Fall Down
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
 
-                                                    // F U N C T I O N S 
+//                                M E N U   R E L A T E D   F U N C T I O N S 
 
 // FUNCTION to draw the game Frame (Inputs defined: GLOBAL frameWidth, GLOBAL frameHeight)                                                    
 void gameFrame(){//AKILA
-    for(int i = 0; i < frameWidth; i++) cout <<"-";
+    for(int i = 0; i < frameWidthConstant; i++) cout <<"-";
     cout << endl;
-    for(int j = 0;j < frameHeight; j++){
+    for(int j = 0;j < frameHeightConstant; j++){
         cout <<"|";
-        cout << setw(frameWidth - 1);
+        cout << setw(frameWidthConstant - 1);
         cout << "|" << endl;
     }
-    for(int k = 0; k < frameWidth; k++) cout <<"-";
+    for(int k = 0; k < frameWidthConstant; k++) cout <<"-";
 }
 
 // FUNCTION to display and configure the main menu (Inputs taken from user to GLOBAL mainMenuUserInput)
@@ -75,7 +138,7 @@ int mainMenu(){//AKILA
     cout << "1 - New Game \n 2 - Scores \n3 - Instructions \n4 - Credits \n5 - Exit ";
     cin >> mainMenuUserInput;
     switch(mainMenuUserInput){
-        case (1): ingameLogic();              //New Game Connection
+        case (1): gameInitialize();                //New Game Connection
         case (2): scoreFileReader();            //Score List Connection
         case (3): gameInstructions();           //Instruction Connection
         case (4): creditsPage();                //Credits Connection
@@ -103,7 +166,7 @@ void returnToMainMenu(){//AKILA
 
 // FUNCTION to display the splash screen
 void splashScreen(){//AKILA
-    for(int i = 0; i < frameWidth; i++) cout <<"-";
+    for(int i = 0; i < frameWidthConstant; i++) cout <<"-";
     cout << endl;
     
     cout << "                                                                                                  " << endl;
@@ -132,7 +195,7 @@ void splashScreen(){//AKILA
     cout << "                                                                                                  " << endl;
     cout << "                                                                                                  " << endl;
 
-    for(int k = 0; k < frameWidth; k++) cout <<"-";
+    for(int k = 0; k < frameWidthConstant; k++) cout <<"-";
     this_thread::sleep_for(chrono::seconds(splashScreenRefresh));    //sleep console for specified time
     mainMenu();                                                      //link to mainMenu Function
 
@@ -168,6 +231,49 @@ void gameInstructions(){//AKILA
     returnToMainMenu();                         //Connection to main menu function
 }
 
+
+//-----------------------------------------------------------------------------------------------------------
+
+//                                I N G A M E    F U N C T I O N S
+
+
+//Function to Initialize the Game
+int gameInitialize(){
+    //Draw an interface to Get users Name
+    // Input User name to store marks
+    //On completion, call the game logic system
+
+    //New Game Resets
+    gameOverStatus = gameOverStatusConstant;                    // Preset the Game Over Status
+    dynamicDistanceAdjust = dynamicDistanceAdjustConstant;      //Reset the Dynamic Distance Adjust for new Game
+    ballPositionFromTop = ballPositionFromTopConstant;          //Reset the Position of the ball From the top
+    dynamicDistanceAdjustNegetive = dynamicDistanceAdjustNegetiveConstant;   //Reset the Dynamic Distance Adjust Negetive for new Game
+
+    //Game loop
+    while(!gameOverStatus){
+        gameDraw();                                                         //Call the GameDraw Function
+        this_thread::sleep_for(chrono::milliseconds(sleepTimeConstant));    //Set the refresh time for console (sleep time)
+        if(dynamicDistanceAdjust > 0){                                      //Condition if the obstacle is right to the ball
+            dynamicDistanceAdjust -= obstacleMoveRate;                      //Move the obstacle left
+        }else if(dynamicDistanceAdjustNegetive > 2){                        //Condition if the obstacle is under or left of ball
+            dynamicDistanceAdjustNegetive -= obstacleMoveRate;              //Move the obstacle left
+        }
+        input();                                                            //Call the inputs function
+        keyBoardLogic();                                                    //Call the keyboard logic function
+        ballFall();                                             //Call the Function to make the Ball Fall
+
+        //Conditions to loop the game
+        if((dynamicDistanceAdjust == 0) && (dynamicDistanceAdjustNegetive == 2)){
+            dynamicDistanceAdjust = dynamicDistanceAdjustConstant;
+            dynamicDistanceAdjustNegetive = dynamicDistanceAdjustNegetiveConstant;
+        }
+        system("cls");                                          //Refresh the Console
+
+
+    }
+    return(0);
+}
+
 // FUNCTION to handle keyboard input (BENARAGAMA)
 void input(){//BENARAGAMA
     if (_kbhit())                               // Check if a key has been pressed
@@ -196,74 +302,98 @@ void input(){//BENARAGAMA
     }
 }
 
-
-//-----------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-void ingameLogic()//CHANUKA
- {
-    switch (dir) {
-        case UP:                           // Move up
-            moveUpDown--;
-            break;
-        case DOWN:                         // Move down
-            moveUpDown++;
-            break;
-        default:
-            break;
+//FUNCTION to control logic with keyboard Inputs
+void keyBoardLogic(){
+    if(ballPositionFromTop > maximumHeightTheBallCanMoveConstant){
+        switch (dir) {
+            case UP:                           // Move up
+                ballPositionFromTop -= ballMoveUpToKeyPressConstant;
+                break;
+        }
     }
-    // Update score every second
-    auto now = chrono::steady_clock::now();
-    auto duration = chrono::duration_cast<chrono::seconds>(now - lastScoreUpdate);
-    if (duration.count() >= 1) {
-        score += 10;
-        lastScoreUpdate = now;
+
+}
+
+//FUNCTION to draw the game in all 3 Instances
+int gameDraw(){
+    //When the obstacle is in right of the ball
+    if (dynamicDistanceAdjust > 0){
+        for(int i = 0; i < gameBodyHeightConstant; i++){
+            if(i > ballPositionFromTop){
+                if((i - (ballPositionFromTop)) < ballHeightConstant){
+                    cout << left << setw(ballPositionFromLeftConstant) << "" << setw(ballWidthConstant) << drawBall[i - (ballPositionFromTop + 1)];   
+                }else{
+                    cout << left << setw(ballPositionFromLeftConstant + ballWidthConstant) << "";
+                }
+                if(i > ballIdlePositionFromTop){
+                    cout << setw(dynamicDistanceAdjust) << "" << setw(obstacleWidthConstant) << drawObstacle[i - (obstaclePositionFromTopConstant)];
+                } 
+                cout << endl;        
+            }else{
+                cout << endl;
+            }
+        }
+    }
+    //When the distance between Obstacle and Ball is 0 || When the obstable is under the ball
+    if(dynamicDistanceAdjust == 0){
+        //Collsion Exit
+        if((ballPositionFromTop > 12) && (dynamicDistanceAdjustNegetive == 30)){
+            cout << "collision";
+            gameOverStatus = true;
+            return(0);
+        }
+        ///To be changed
+        if((ballPositionFromTop > 12) && (dynamicDistanceAdjustNegetive != 30)){
+            for (int i = 0; i < gameBodyHeightConstant; i++){
+                if(i <= ballIdlePositionFromTop){
+                cout << left << setw(obstacleWidthConstant + dynamicDistanceAdjustNegetive) << "";
+                }
+                if(i > ballIdlePositionFromTop){
+                    cout << left << setw(dynamicDistanceAdjustNegetive) << "" << setw(obstacleWidthConstant) << drawObstacle[i - 19];
+                 }   
+                if(i - (ballPositionFromTop + 1) < ballHeightConstant){
+                    cout << left << setw(ballPositionFromLeftConstant - (dynamicDistanceAdjustNegetive + obstacleWidthConstant)) << "" << setw(ballWidthConstant) << drawBall[i - (ballPositionFromTop + 1)] << endl;
+                }else{
+                    cout << endl;
+                }
+            }
+        }
+
+        if(ballPositionFromTop <= 12){
+            for(int i  = 0; i < gameBodyHeightConstant; i++){
+                //No collsion
+                if(i - (ballPositionFromTop + 1) <= ballHeightConstant ){
+                    cout << left << setw(ballPositionFromLeftConstant) << "" << setw(ballWidthConstant) << drawBall[i - (ballPositionFromTop + 1)] << endl;
+                }
+
+                if((i > (ballPositionFromTop + ballHeightConstant)) && (i <= ballIdlePositionFromTop)){
+                    cout << endl;
+                }
+                 
+                if(i > 18){
+                cout << left << setw(dynamicDistanceAdjustNegetive) << "" << setw(obstacleWidthConstant) << drawObstacle[i - obstaclePositionFromTopConstant] << endl;
+                }
+            }       
+        }    
+    }
+    //Draw the Game Floor
+    for (int i = 0; i < frameWidthConstant; i++)cout << "-";
+
+    return(0);
+}
+
+//FUNCTION to make the ball Fall Down
+void ballFall(){
+    if(ballPositionFromTop >= 16){
+    }else{
+        ballPositionFromTop += ballFallRateConstant;
     }
 
 }
 
 
-void gameDraw() //CHANUKA
-{   
-    
-    
-    int ballPushDistance = 20;
-    system("cls");                            // Clear the screen
-    for(int i;i<moveUpDown;i++){
-        cout<<endl;
-    }
-
-    cout << setw(ballPushDistance) << " ";
-    cout << setw(10) << "   ,@@@@," << endl;
-    cout << setw(ballPushDistance) << " ";
-    cout << setw(10) << "  ,@@@@@@@@," << endl;
-    cout << setw(ballPushDistance) << " ";
-    cout << setw(10) << "  @@@@@@@@@@" << endl;
-    cout << setw(ballPushDistance) << " ";
-    cout << setw(10) << "  '@@@@@@@@'" << endl;
-    cout << setw(ballPushDistance) << " ";
-    cout << setw(10) << "    '@@@@'" << endl;
-    
-    
-   
-    
-
-   this_thread::sleep_for(chrono::milliseconds(100)); // Introduce a delay of 100 milliseconds
-
-}
 
 
-void gameSetup()//CHANUKA
-{
-	gameOver = false;
-	dir = STOP;
-}
 
 
 
@@ -275,11 +405,7 @@ int main(){
 
     //gameFrame();
     //splashScreen();
-    gameSetup();
-    while (!gameOver) {
-        input();         // Get user input
-        ingameLogic();   // Update game logic based on input
-        gameDraw();      // Draw the game
-    }
-    
+    gameInitialize();
+
+   return (0); 
 }
