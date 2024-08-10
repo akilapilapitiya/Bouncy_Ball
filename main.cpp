@@ -100,8 +100,16 @@ int ballPositionFromTop;            //Variable to store Position of the ball Fra
 int dynamicDistanceAdjustNegetive;  //Variable to store the distancve between left wall and the obstacle when dynamicDistanceAdjust == 0
 
 //Player Management and Score Maps
-int gameScore; 
-string playerName;
+int gameScore;                      //Ingame Variable to store the players score
+string playerName;                  // Ingame Variable to store the players name
+
+//Score File Read Related
+string nameStoreVariable;           //Used to ssstream the values in file reading [playername]
+int scoreStoreVariable;             //Used to ssstream the values in file reading [playerscore]
+
+//Marks Sorting Dummy Variables
+string nameStoreDummyVariable;
+int scoreStoreDummyVariable;
 
 
 //----------------------------------------------------------------------------------------------------------------------------------------------
@@ -115,7 +123,7 @@ int mainMenu();            //Main Menu Configurations
 void returnToMainMenu();   //Function to Return to the Main Menu from Menu Elements
 void splashScreen();       //Splash Screen Design for the Game
 void creditsPage();        //Credits Page from main Menu
-int scoreFileReader();     //Reads the file used to store Scores
+int scoreDisplay();         //Display Scores
 void gameInstructions();   //Instruction Page for the game
 
 
@@ -130,8 +138,13 @@ void ballFall();                        //Make the Ball Fall Down
 void gameOverDisplay();                 //Game Over Prompt with menu Includes
 int dataWriteFunction();                //Function to write the user data to the file
 
+//GAME STARTUP FUNCTIONS
+int scoreFileReader();                 //Read the Score File and Update the array
+void scoreArraySort();                 //Sort the ScoreArray in descending order
+
 //DRAW FUNCTIONS
 void splashScreenDraw();                //Slash Screen Design
+void gameMenuScreenDraw();
 
 
 
@@ -153,20 +166,24 @@ void gameFrame(){//AKILA
 
 // FUNCTION to display and configure the main menu  (Inputs taken from user to GLOBAL mainMenuUserInput)
 int mainMenu(){//AKILA
-    system("cls");
-    cout << "Game Menu" << endl;
-    cout << "1 - New Game \n 2 - Scores \n3 - Instructions \n4 - Credits \n5 - Exit ";
+    
+    gameMenuScreenDraw();
     cin >> mainMenuUserInput;
 
-    switch(mainMenuUserInput){
-        case (1): gameInitialize();                //New Game Connection
-        case (2): scoreFileReader();            //Score List Connection
-        case (3): gameInstructions();           //Instruction Connection
-        case (4): creditsPage();                //Credits Connection
-        case (5): break  ;                            //Exit Connection
-        default:
-            cout << "Enter a valid Input" << endl; 
-            cin >> mainMenuUserInput;       
+    if(mainMenuUserInput == 1){
+        gameInitialize();
+    }else if (mainMenuUserInput == 2){
+        scoreDisplay();
+    }else if (mainMenuUserInput == 3){
+        gameInstructions();
+    }else if (mainMenuUserInput == 4){
+        creditsPage();
+    }else if (mainMenuUserInput == 5){
+        return(0);
+    }else{
+        system("cls");
+        mainMenu();
+
     }
     return(0);
 }
@@ -205,19 +222,12 @@ void creditsPage(){//AKILA
 }
 
 //FUNCTION to handle the score card window
-int scoreFileReader(){//AKILA
+int scoreDisplay(){//AKILA
     system("cls");                              //Clear the terminal
     cout << "Display Scorecard";
-    fstream readFile;                           //Read File Variable Defined
-    readFile.open("score.txt", ios::in);        //open "score.txt"
-    if(!readFile.is_open()){                    //check if the file is open
-        cout << "Error In Opening the File";    //Statement if the file is not open
-        return(0);                              //Exit program if file is not open
-    }
-    
-    readFile.close();                           //Close file reader
-    returnToMainMenu();                         //Connection to main menu function
-    return(0);                                  //Useless return for code completemess
+
+    returnToMainMenu();
+    return(0);
 }
 
 // FUNCTION to handle the game instructions window
@@ -228,7 +238,7 @@ void gameInstructions(){//AKILA
 }
 
 
-//-----------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
 
 //                                I N G A M E    F U N C T I O N S
 
@@ -439,22 +449,87 @@ int dataWriteFunction(){
 
 
 
+//---------------------------------------------------------------------------------------------------------------------------
+
+//                                 S T A R T U P   F U N C T I O N S
+
+
+//FUNCTION to read the Score File and Store in the Array
+int scoreFileReader(){//AKILA
+	fstream readFile;                           //Read File Variable Defined
+    readFile.open("score.txt", ios::in);        //open "score.txt"
+    if(!readFile.is_open()){                    //check if the file is open
+        cout << "Error In Opening the File";    //Statement if the file is not open
+        return(0);                              //Exit program if file is not open
+    }
+    for (int i = 0; (getline(readFile, valueStore) && (i < numberOfPlayersExpectedConstant)); i++) {
+        stringstream ss(valueStore);
+        // Extract the name and score from the line
+        if (getline(ss, nameStoreVariable, ',') && (ss >> scoreStoreVariable)) {
+            playerStatArray[i].playerName = nameStoreVariable;              //Assign the Array with the name
+            playerStatArray[i].playerScore = scoreStoreVariable;            //Assign the Array with the score
+        }
+    }  
+    readFile.close();                                                       //Close file reader
+
+    
+    //Performance testing
+    for(int i = 0; i < (numberOfPlayersExpectedConstant); i++){
+    	cout << playerStatArray[i].playerName << " and " << playerStatArray[i].playerScore << endl;
+	}
+
+    return(0);
+    }
+
+//Sort the Score Array in Descending Order
+void scoreArraySort(){//AKILA
+    for(int i = 0; i < numberOfPlayersExpectedConstant; i++){
+        for(int m = i; m >= 0; m--){
+            if(playerStatArray[m].playerScore < playerStatArray[m + 1].playerScore){
+
+                //Swap the m'th set of element to dummy variables
+                nameStoreDummyVariable = playerStatArray[m].playerName;
+                scoreStoreDummyVariable = playerStatArray[m].playerScore;
+
+                //Copy the set of element of (m + 1)'th set to m'th set
+                playerStatArray[m].playerName = playerStatArray[m + 1].playerName;
+                playerStatArray[m].playerScore = playerStatArray[m + 1].playerScore;
+
+                //Copy the dummy data to the (m + 1)'th set
+                playerStatArray[m + 1].playerName = nameStoreDummyVariable;
+                playerStatArray[m + 1].playerScore = scoreStoreDummyVariable;
+            }
+        }
+    }
+    //Performance testing
+    for(int i = 0; i < (numberOfPlayersExpectedConstant); i++){
+    	cout << playerStatArray[i].playerName << " and " << playerStatArray[i].playerScore << endl;
+    }
+}
+
+
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 
 int main(){
 
     //gameFrame();
-    splashScreen();
+    //splashScreen();
     //gameInitialize();
+    scoreFileReader();
+    scoreArraySort();
 
    return (0); 
 }
 
 
 
+//------------------------------------------------------------------------------------------------------------------------
+//                                  D E S I G N      T E M P L A T E S 
+
 
 void splashScreenDraw(){
+    system("cls");
     cout << "                                                                                                  " << endl;
     cout << "       BTTTTTTTTTTTTb                        BALl     EBAl                                        " << endl;
     cout << "       BALLBOUNCEBALLBb                      BALl     EBAl                                        " << endl;
@@ -480,4 +555,35 @@ void splashScreenDraw(){
     cout << "       BALLBOUNCEBALLBp    0LBBALLBOU    0ALLBBALL0    lCEB    BALl    NCEBALLBBA    UNCEBALLBB   " << endl;
     cout << "                                                                                                  " << endl;
     cout << "                                                                                                  " << endl;
+}
+
+
+
+void gameMenuScreenDraw(){
+    system("cls");
+	cout<< "  _____________________________________________________________________________________________________________   "<< endl;  
+	cout<< " |       _____________________________________________________            ...      \\  |  /      ...            |   "<< endl;
+	cout<< " |      |                                                     |         .@ @ @.     \\ | /     .@ @ @.          |   "<< endl;
+	cout<< " |      |     G G G           A       M         M  E E E E    |        '@ @ @ @.  ___\\|/___  '@ @ @ @.         |   "<< endl;
+	cout<< " |      |   G       G        A A      M M     M M  E          |        '@ @ @ @.     /|\\     '@ @ @ @'         |  "<< endl;
+	cout<< " |      |  G                A   A     M  M   M  M  E          |         '@ @ @'     / | \\      @ @ @           |   "<< endl;
+	cout<< " |      |  G     G G G     A A A A    M   M M   M  E E E      |           '''      /  |  \\      '''            |   "<< endl;
+	cout<< " |      |  G       G G    A       A   M    M    M  E         /______________________________________________   |   "<< endl;
+	cout<< " |      |   G     G  G   A         A  M         M  E        /                                               |  |  "<< endl;
+	cout<< " |      |     G G    G  A           A M         M  E E E E /  M        M  E E E E E  N       N  U        U  |  |   "<< endl;
+	cout<< " |      |_________________________________________________/   M M    M M  E          N N     N  U        U  |  |   "<< endl;
+	cout<< " |                                                  |         M  M  M  M  E          N  N    N  U        U  |  |   "<< endl;
+	cout<< " |           /\\        /\\        /\\                 |         M   M    M  E E E      N   N   N  U        U  |  |"<< endl;
+	cout<< " |          /  \\      /  \\      /  \\                |         M        M  E          N    N  N  U        U  |  |"<< endl;
+	cout<< " |         /|  |\\    /|  |\\    /|  |\\               |         M        M  E          N     N N   U      U   |  |"<< endl;
+	cout<< " |          |  |      |  |      |  |                |         M        M  E E E E E  N       N    U U U     |  |   "<< endl;
+	cout<< " |          |  |      |  |      |  |                |_______________________________________________________|  |   "<< endl;
+	cout<< " |          |__|      |__|      |__|                                                                           |   "<< endl;
+    cout<< " |           )(        )(        )(           1.  New Game                                                |  "<<endl;
+    cout<< " |          (  )      (  )      (  )          2.  Score Details                                                     |   "<<endl;
+    cout<< " |           )(        )(        )(           3.  How to play                                                     |   "<<endl;
+    cout<< " |          (  )      (  )      (  )          4.  Credits                                                |   "<<endl;
+    cout<< " |           )(        )(        )(           5.  Exit                                                         |    "<<endl;
+    cout<< " |                                                                                                             |    "<<endl;
+    cout<<"              Enter your choice  >>>>  ";
 }
