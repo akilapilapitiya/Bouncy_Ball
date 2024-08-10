@@ -307,7 +307,7 @@ int gameInitialize(){//AKILA
         system("cls");                                          //Refresh the Console
 
         //Testing FUNCTIONS
-        gamePlayTestingDetails();
+        //gamePlayTestingDetails();
     }
     gameOverDisplay();                                          //Call the game Over Function
     return(0);
@@ -668,10 +668,6 @@ void gameOverInterface(){
     cout<<"  |______________________________________________________________________________________________________________| "<<endl;
     returnToMainMenu();             //Call Function to Return to main Menu
 }
-
-
-
-
 
 void instructionInterface(){
     system("cls");
