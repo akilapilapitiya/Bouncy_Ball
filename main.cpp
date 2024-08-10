@@ -258,9 +258,21 @@ int scoreDisplay(){//AKILA
 }
 
 // FUNCTION to handle the game instructions window
-void gameInstructions(){//AKILA
+void gameInstructions(){//benaragama
     system("cls");                              //Clear the terminal
     instructionInterface();                     //Instructions Interface Design
+        // Displaying the title
+    cout << setw(62) << "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII\n\n\n";
+    cout << setw(53) << "IIIIIIIIIII    Instructions    IIIIIIIIIII\n\n\n";
+    cout << setw(62) << "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII\n\n\n";
+    cout << endl;
+    // Displaying the game instructions centered within a 25x100 frame
+    cout << setw(53) << "IIIIIIIIIII    S - Move Down    IIIIIIIIIII\n";
+    cout << setw(53) << "IIIIIIIIIII    W - Move Up      IIIIIIIIIII\n";
+    cout<<"\n\n\n\n";
+  
+    cout << setw(62) << "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII\n";
+    cout << endl;
     returnToMainMenu();                         //Connection to main menu function
 }
 
