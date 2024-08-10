@@ -44,7 +44,7 @@ string drawObstacle[] = {"   A   ",    //drawObstacle[0]
 //Game Draw related Constants
 const bool gameOverStatusConstant = false;              //Game over status set to false by Default
 const int sleepTimeConstant = 300;                      //Ingame Console Refresh time in milli seconds
-const int obstacleMoveRate = 4;                         //Rate at which the obstacle Moves to left
+
 
 //Obstacle and Ball draw RESET constants
 const int dynamicDistanceAdjustConstant = 60;           //Initial Distance Between the Ball and Obstacle
@@ -59,18 +59,29 @@ const int ballFallRateConstant = 2;                     //Rate in which the ball
 
 
 //Player Management and Score Maps
-const int gameScoreIncrementConstant = 1;               //Increment of score for avoiding a single Obstacle
+const int gameScoreIncrementConstant = 5;               //Increment of score for avoiding a single Obstacle
 const int gameScoreReset = 0;                           //Reset Value for the Game Score
 const string playerNameReset = "";                      //Reset Value for Player name
 const int numberOfPlayersExpectedConstant = 10;         //Size of the playerStatArray
+const bool highScoreStatusConstant = false;             //Reset the high score status to false
 
 //Global Structure named playerStats
 struct playerStats{
     string playerName;
     int playerScore;
 };
-struct playerStats playerStatArray[numberOfPlayersExpectedConstant];    //Assign the Structure to an array for data storing
+struct playerStats playerStatArray[numberOfPlayersExpectedConstant + 1];    //Assign the Structure to an array for data storing
 
+
+// Global Constants to controll gameplay Speeds(Relative to game Scores)
+const int obstacleMoveRateConstant = 4;                         //Rate at which the obstacle Moves to left RESET value
+
+int gameSpeedControllArray[] = {20,     //gameSpeedControllArray[0]  First Speed Increment
+                                40,     //gameSpeedControllArray[1]  Second Speed Increment
+                                60};     //gameSpeedControllArray[2]  Third Speed Increment
+
+const int gameSpeedControlPointerConstant = 0; //Reset check loop value to zero
+const int speedDeltaConstant = 4;               //Rate of change in obstacle movement speed
 
 //------------------------------------------------------------------------------------------------------------------
 
@@ -102,6 +113,12 @@ int dynamicDistanceAdjustNegetive;  //Variable to store the distancve between le
 //Player Management and Score Maps
 int gameScore;                      //Ingame Variable to store the players score
 string playerName;                  // Ingame Variable to store the players name
+bool highScoreStatus;               //Variable to handle the High Score Status
+
+// Global Variables to controll gameplay Speeds(Relative to game Scores)
+int gameSpeedControlPointer;  //Variable to locate Array Vaslues in the game speed changer array
+int obstacleMoveRate; //Variable to control the Rate in which the obstacles Move
+
 
 //Score File Read Related
 string nameStoreVariable;           //Used to ssstream the values in file reading [playername]
@@ -110,6 +127,7 @@ int scoreStoreVariable;             //Used to ssstream the values in file readin
 //Marks Sorting Dummy Variables
 string nameStoreDummyVariable;
 int scoreStoreDummyVariable;
+
 
 
 //----------------------------------------------------------------------------------------------------------------------------------------------
@@ -135,16 +153,25 @@ void input();                           //Function to handle keyboard input
 void keyBoardLogic();                   //Function to bind ingame Actions with Keyboard logics
 int gameDraw();                         //Draw the Game in all Instances
 void ballFall();                        //Make the Ball Fall Down
+void gamePhaseChanger();                //Change the game spped based on the marks gained
 void gameOverDisplay();                 //Game Over Prompt with menu Includes
 int dataWriteFunction();                //Function to write the user data to the file
+int highScoreIdentifier();              //Identify if the last upadted score is the highest score
 
 //GAME STARTUP FUNCTIONS
+int gameStartUp();                     //All Tasks Handled At Game Start
 int scoreFileReader();                 //Read the Score File and Update the array
 void scoreArraySort();                 //Sort the ScoreArray in descending order
 
 //DRAW FUNCTIONS
-void splashScreenDraw();                //Slash Screen Design
-void gameMenuScreenDraw();
+void splashScreenDraw();                //Splash Screen Design
+void gameMenuScreenDraw();              //Game menu Design
+void gameOverInterface();               //Game Over Display Design
+void instructionInterface();            //Instructions Interface Design 
+
+
+//TESTING FUNCTIONS
+void gamePlayTestingDetails();         //inside  gameInitialize();
 
 
 
@@ -233,7 +260,7 @@ int scoreDisplay(){//AKILA
 // FUNCTION to handle the game instructions window
 void gameInstructions(){//AKILA
     system("cls");                              //Clear the terminal
-    cout << "Display Game Instructions";
+    instructionInterface();                     //Instructions Interface Design
     returnToMainMenu();                         //Connection to main menu function
 }
 
@@ -270,14 +297,17 @@ int gameInitialize(){//AKILA
         input();                                                            //Call the inputs function
         keyBoardLogic();                                                    //Call the keyboard logic function
         ballFall();                                             //Call the Function to make the Ball Fall
-
+        gamePhaseChanger();                                                 //Changes the Phase of Gameplay based on score
         //Conditions to loop the game and Mark the scores
-        if((dynamicDistanceAdjust == 0) && (dynamicDistanceAdjustNegetive == 2)){
+        if((dynamicDistanceAdjust <= 0) && (dynamicDistanceAdjustNegetive <= 2)){
             dynamicDistanceAdjust = dynamicDistanceAdjustConstant;                 //Reset dynamicDistanceAdjust to default
             dynamicDistanceAdjustNegetive = dynamicDistanceAdjustNegetiveConstant; //Reset dynamicDistanceAdjustNegetive to default
             gameScore += gameScoreIncrementConstant;                               //Increment the Game Score by desires
         }
         system("cls");                                          //Refresh the Console
+
+        //Testing FUNCTIONS
+        gamePlayTestingDetails();
     }
     gameOverDisplay();                                          //Call the game Over Function
     return(0);
@@ -291,6 +321,9 @@ void gameVariableResetFunction(){
     dynamicDistanceAdjust = dynamicDistanceAdjustConstant;      //Reset the Dynamic Distance Adjust for new Game
     ballPositionFromTop = ballPositionFromTopConstant;          //Reset the Position of the ball From the top
     dynamicDistanceAdjustNegetive = dynamicDistanceAdjustNegetiveConstant;   //Reset the Dynamic Distance Adjust Negetive for new Game
+    gameSpeedControlPointer = gameSpeedControlPointerConstant;      //Reset the Game Speed Pointer
+    obstacleMoveRate = obstacleMoveRateConstant;     //Reset the Speed in Wich the Obstacles Move
+    highScoreStatus = highScoreStatusConstant;       //Reset the High Score Status to false
 
     //Player Info Resets
     playerName = playerNameReset;                   //Reset thePlayer Name to NULL
@@ -359,7 +392,7 @@ int gameDraw(){//AKILA
         }
     }
     //When the distance between Obstacle and Ball is 0 || When the obstable is under the ball
-    if(dynamicDistanceAdjust == 0){
+    if(dynamicDistanceAdjust <= 0){
         //Collsion Exit
         if((ballPositionFromTop > 12) && (dynamicDistanceAdjustNegetive == 30)){
             gameOverStatus = true;                  //Since there is a collision change game over bool value to true
@@ -415,20 +448,22 @@ void ballFall(){//AKILA
     }else{
         ballPositionFromTop += ballFallRateConstant;
     }
+}
 
+//FUNCTION to change the game Speed
+void gamePhaseChanger(){
+    if( gameSpeedControllArray[gameSpeedControlPointer] == gameScore){
+        obstacleMoveRate += speedDeltaConstant;
+        gameSpeedControlPointer++;
+    }
 }
 
 //FUNCTION to act in Game Over Instance
 void gameOverDisplay(){//AKILA
     system("cls");
-    cout << "game Over" << endl;
-    cout << "Your Score is: " << gameScore;
     dataWriteFunction();            //Call Function to Write the data to the file
+    gameOverInterface();
     gameVariableResetFunction();    //Call Function to Reset All Dynamic Data
-    returnToMainMenu();             //Call Function to Return to main Menu
-
-
-
 }
 
 // FUNCTION to save user data and Scores 
@@ -442,16 +477,38 @@ int dataWriteFunction(){
     fileWriter << playerName << "," << gameScore;
     fileWriter << endl;
     fileWriter.close();
+
+    scoreFileReader();                          //Read the Score File in the Array
+    scoreArraySort();                           //Sort the User Details Array in Ascending Order
+    highScoreIdentifier();                      //Find Whether the Score is a High Score
+
+
     return(0);
 }
 
-
+// FUNCTION to identify if the Score is the Highest Score
+int highScoreIdentifier(){
+    if(gameScore == playerStatArray[0].playerScore){
+        highScoreStatus = true;
+    }
+    return(0);
+}
 
 
 
 //---------------------------------------------------------------------------------------------------------------------------
 
 //                                 S T A R T U P   F U N C T I O N S
+
+//FUNCTION for the GAME STARTUP
+int gameStartUp(){
+    scoreFileReader();                          //Read the Score File in the Array
+    scoreArraySort();                           //Sort the User Details Array in Ascending Order
+
+
+
+    return(0);
+}
 
 
 //FUNCTION to read the Score File and Store in the Array
@@ -472,12 +529,11 @@ int scoreFileReader(){//AKILA
     }  
     readFile.close();                                                       //Close file reader
 
-    
+    /*
     //Performance testing
     for(int i = 0; i < (numberOfPlayersExpectedConstant); i++){
     	cout << playerStatArray[i].playerName << " and " << playerStatArray[i].playerScore << endl;
-	}
-
+	}*/
     return(0);
     }
 
@@ -513,11 +569,9 @@ void scoreArraySort(){//AKILA
 
 int main(){
 
-    //gameFrame();
-    //splashScreen();
+    gameStartUp();
+    splashScreen();
     //gameInitialize();
-    scoreFileReader();
-    scoreArraySort();
 
    return (0); 
 }
@@ -579,11 +633,93 @@ void gameMenuScreenDraw(){
 	cout<< " |          |  |      |  |      |  |                |         M        M  E E E E E  N       N    U U U     |  |   "<< endl;
 	cout<< " |          |  |      |  |      |  |                |_______________________________________________________|  |   "<< endl;
 	cout<< " |          |__|      |__|      |__|                                                                           |   "<< endl;
-    cout<< " |           )(        )(        )(           1.  New Game                                                |  "<<endl;
-    cout<< " |          (  )      (  )      (  )          2.  Score Details                                                     |   "<<endl;
-    cout<< " |           )(        )(        )(           3.  How to play                                                     |   "<<endl;
-    cout<< " |          (  )      (  )      (  )          4.  Credits                                                |   "<<endl;
+    cout<< " |           )(        )(        )(           1.  New Game                                                     |  "<<endl;
+    cout<< " |          (  )      (  )      (  )          2.  Score Details                                                |   "<<endl;
+    cout<< " |           )(        )(        )(           3.  How to play                                                  |   "<<endl;
+    cout<< " |          (  )      (  )      (  )          4.  Credits                                                      |   "<<endl;
     cout<< " |           )(        )(        )(           5.  Exit                                                         |    "<<endl;
     cout<< " |                                                                                                             |    "<<endl;
     cout<<"              Enter your choice  >>>>  ";
+}
+
+void gameOverInterface(){
+    system("cls");
+    cout<<"   ______________________________________________________________________________________________________________  "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |        =================================================================================================     | "<<endl;
+    cout<<"  |                G G G G        A       M       M  E E E E      O O O  V         V  E E E E  R R R             | "<<endl;
+    cout<<"  |              G        G      A A      M M   M M  E           O     O  V       V   E        R    R            | "<<endl;
+    cout<<"  |             G               A   A     M  M M  M  E E E      O       O  V     V    E E E    R    R            | "<<endl;
+    cout<<"  |             G     G G G    A A A A    M   M   M  E E E      O       O   V   V     E E E    R R R             | "<<endl;
+    cout<<"  |              G      G G   A       A   M       M  E           O     O     V V      E        R   R             | "<<endl;
+    cout<<"  |                G G G  G  A         A  M       M  E E E E      O O O       V       E E E E  R    R            | "<<endl;
+    cout<<"  |        =================================================================================================     | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                     YOUR FINAL SCORE IS >>>>>>>>>>   " << setw(5) << gameScore << "                                   | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |______________________________________________________________________________________________________________| "<<endl;
+    returnToMainMenu();             //Call Function to Return to main Menu
+}
+
+
+
+
+
+void instructionInterface(){
+    system("cls");
+    cout<<"   ______________________________________________________________________________________________________________  "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                             Follow the instruction to play 'BALL BOUNCE'                                     | "<<endl;
+    cout<<"  |                            ==============================================                                    | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |______________________________________________________________________________________________________________| "<<endl;
+}
+
+void scoreDisplayInterface(){
+
+
+}
+
+void creditsInterface(){
+    //fdgfdhbfgbgnbfgnfg
+}
+
+
+
+
+//                                   T E S T I N G   A S S I S T A N C E
+
+//Stats Display
+void gamePlayTestingDetails(){
+    cout << "Dynamic Diastance Adjust: "<< dynamicDistanceAdjust << endl;
+    cout << "dynamicDistanceAdjustNegetive: "<< dynamicDistanceAdjustNegetive << endl;
+    cout << "ballPositionFromTop: " << ballPositionFromTop << endl;
+    cout << "obstacleMoveRate: " << obstacleMoveRate << endl;
+
+
 }
