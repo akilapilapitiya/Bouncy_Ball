@@ -3,6 +3,7 @@
 #include <iomanip>         //Outputs adjustments
 #include <thread>          //For Code Sleep
 #include <chrono>          //To make the code sleep
+#include <windows.h>       //For String Colours    used in design Functions
 #include <cstdlib>         // For system()
 #include <fstream>         //File Handling
 #include <string>          //String Manipulations
@@ -87,6 +88,18 @@ int gameSpeedControllArray[] = {20,     //gameSpeedControllArray[0]  First Speed
 
 const int gameSpeedControlPointerConstant = 0; //Reset check loop value to zero
 const int speedDeltaConstant = 4;               //Rate of change in obstacle movement speed
+
+
+//Colors for Designer
+const int whiteColor = 7;
+const int yellowColor = 6;
+const int redColor = 4;
+const int greenColor = 2;
+const int greyColor = 8;
+const int blueColor = 3;
+const int pinkColor = 13;
+
+
 
 //------------------------------------------------------------------------------------------------------------------
 
@@ -612,6 +625,8 @@ int main(){
 
 void splashScreenDraw(){
     system("cls");
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(h, blueColor);
     cout<<  "_____________________________________________________________________________________________________________ " << endl;
     cout << "|                                                                                                           | " << endl;
     cout << "|       BTTTTTTTTTTTTb                        BALl     EBAl                                                 | " << endl;
@@ -638,6 +653,7 @@ void splashScreenDraw(){
     cout << "|       BALLBOUNCEBALLBp    0LBBALLBOU    0ALLBBALL0    lCEB    BALl    NCEBALLBBA    UNCEBALLBB            | " << endl;
     cout << "|                                                                                                           | " << endl;
     cout<<  "_____________________________________________________________________________________________________________ " << endl;
+    	SetConsoleTextAttribute(h, whiteColor);
 }
 
 
@@ -696,11 +712,12 @@ void gameOverInterface(){
     cout<<"  |                                                                                                              | "<<endl;
     cout<<"  |                                                                                                              | "<<endl;
     cout<<"  |______________________________________________________________________________________________________________| "<<endl;
-    returnToMainMenu();             //Call Function to Return to main Menu
+
 }
 
 void instructionInterface(){
     system("cls");
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 	cout << "____________________________________________________________________________________________________"<< endl;
 	cout << "|                                                                                                  |" << endl;
 	cout << "|    H    H  OOOOOO   W     W      TTTTTTTT   OOOOOO         PPPPPP   L       AAAAAA    Y     Y    |" << endl;
@@ -711,19 +728,19 @@ void instructionInterface(){
 	cout << "|                                                                                                  |" << endl; 
 	cout << "|                                                                                                  |" << endl;	
 	cout << "|                                                                               ..                 |" << endl;
-	cout << "| Avoid the Ball Landing on the Spikes                                       ,@@@@@@,              |" << endl;
+	cout << "| Avoid Landing the Ball on the Spikes                                       ,@@@@@@,              |" << endl;
 	cout << "|                                                                           @@@@@@@@@@             |" << endl;
-	cout << "| Use 'W' to mall the ball Up inorder to Avoid Spkies                      @@@@@@@@@@@@            |" << endl;
+	cout << "| Use 'W' to move the ball Up to Avoid Spkies                              @@@@@@@@@@@@            |" << endl;
 	cout << "|                                                                           @@@@@@@@@@             |" << endl;
 	cout << "| Clear as many Spikes you can in order to score Points                      '@@@@@@'  A           |" << endl;
 	cout << "|                                                                               ''    AAA          |" << endl;
 	cout << "|                                                                                    AAAAA         |" << endl;
 	cout << "|                                                                                   AAAAAAA        |" << endl;
-	cout << "|                                                                                                  |" << endl;
+	cout << "|              Collect the highest number of points in " << setw(3) << gameplayTimeUpdater << " seconds                                 |" << endl;
 	cout << "|                                                                                                  |" << endl;
 	cout << "|              Earn "<<setw(2) << gameScoreIncrementConstant << " marks for clearing any Obstacle                                             |" << endl;
 	cout << "|                                                                                                  |" << endl;
-	cout << "|              Earn "<<setw(2) << "05" << " bonus Marks for keeping the ball On the Ground                              |" << endl;
+	cout << "|              Earn "<<setw(2) << gameScoreBonusConstant << " bonus Marks for keeping the ball On the Ground                              |" << endl;
 	cout << "|                                                                                                  |" << endl;
 	cout << "|                                                                                                  |" << endl;	
 	cout << "____________________________________________________________________________________________________" << endl;
@@ -732,6 +749,8 @@ void instructionInterface(){
 
 void scoreDisplayInterface(){
     system("cls");
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(h, blueColor); 
     cout << "____________________________________________________________________________________________________" << endl;
 	cout << "|                                                                                                  |" << endl;
 	cout << "|        SSSSSSSSSS     CCCCCCCCCC      OOOOOOOO      RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
@@ -743,11 +762,12 @@ void scoreDisplayInterface(){
 	cout << "|        SSSSSSSSSS     CCCCCCCCCC     OOOOOOOOOO     RRRR  RRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
 	cout << "|        SSSSSSSSSS     CCCCCCCCCC      OOOOOOOO      RRRR   RRRR    EEEEEEEEEE     SSSSSSSSSS     |" << endl;
 	cout << "|                                                                                                  |" << endl;
+    SetConsoleTextAttribute(h, whiteColor);  
 	cout << "|" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "   |" <<endl;
-	cout << "|" << left   << setw(29) <<"" << "|"<< setw(15) << "Player Name " << "|" << setw(10) << "Score" << "|" << setw(41) << "" << "|" << endl;
+	cout << "|" << left   << setw(29) <<"" << "|"<< setw(15) << "Player Name " << "|" << right << setw(10) << "Score" << left << "|" << setw(41) << "" << "|" << endl;
 	cout << "|" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "   |" <<endl;
 	for(int i = 0; i < 10; i++ ){
-		cout << left << "|"<< setw(29) << "" << "|" << setw(15) << playerStatArray[i].playerName << "|" << setw(10) << playerStatArray[i].playerScore  << "|"<< setw(41) << "" << "|" << endl;
+		cout << left << "|"<< setw(29) << "" << "|" << setw(15) << playerStatArray[i].playerName << "|"  << right << setw(10) << playerStatArray[i].playerScore   << left << "|"<< setw(41) << "" << "|" << endl;
 	}
 	cout << "|" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "   |" <<endl;	
 	cout << "|                                                                                                  |" << endl;
