@@ -5,8 +5,8 @@
 #include <chrono>          //To make the code sleep
 #include <cstdlib>         // For system()
 #include <fstream>         //File Handling
-#include <string>         //String Manipulations
-#include <sstream>          //File handling brak of characters
+#include <string>          //String Manipulations
+#include <sstream>         //File handling brak of characters
 #include <conio.h>         //for _kbhit() and _getch() (to control the ball according to inputs)
 using namespace std;
 
@@ -116,8 +116,8 @@ string playerName;                  // Ingame Variable to store the players name
 bool highScoreStatus;               //Variable to handle the High Score Status
 
 // Global Variables to controll gameplay Speeds(Relative to game Scores)
-int gameSpeedControlPointer;  //Variable to locate Array Vaslues in the game speed changer array
-int obstacleMoveRate; //Variable to control the Rate in which the obstacles Move
+int gameSpeedControlPointer;        //Variable to locate Array Vaslues in the game speed changer array
+int obstacleMoveRate;               //Variable to control the Rate in which the obstacles Move
 
 
 //Score File Read Related
@@ -125,8 +125,8 @@ string nameStoreVariable;           //Used to ssstream the values in file readin
 int scoreStoreVariable;             //Used to ssstream the values in file reading [playerscore]
 
 //Marks Sorting Dummy Variables
-string nameStoreDummyVariable;
-int scoreStoreDummyVariable;
+string nameStoreDummyVariable;      //Used to store the name while sorting the scores in descending order
+int scoreStoreDummyVariable;        //Used to store the name while sorting the scores in descending order
 
 
 
@@ -136,13 +136,13 @@ int scoreStoreDummyVariable;
 
 
 // MENU RELATED
-void gameFrame();          //Draw the Game Frame
-int mainMenu();            //Main Menu Configurations
-void returnToMainMenu();   //Function to Return to the Main Menu from Menu Elements
-void splashScreen();       //Splash Screen Design for the Game
-void creditsPage();        //Credits Page from main Menu
+void gameFrame();           //Draw the Game Frame
+int mainMenu();             //Main Menu Configurations
+void returnToMainMenu();    //Function to Return to the Main Menu from Menu Elements
+void splashScreen();        //Splash Screen Design for the Game
+void creditsPage();         //Credits Page from main Menu
 int scoreDisplay();         //Display Scores
-void gameInstructions();   //Instruction Page for the game
+void gameInstructions();    //Instruction Page for the game
 
 
 
@@ -168,6 +168,7 @@ void splashScreenDraw();                //Splash Screen Design
 void gameMenuScreenDraw();              //Game menu Design
 void gameOverInterface();               //Game Over Display Design
 void instructionInterface();            //Instructions Interface Design 
+void scoreDisplayInterface();           //Draw player Scores
 
 
 //TESTING FUNCTIONS
@@ -231,10 +232,7 @@ void returnToMainMenu(){//AKILA
 
 // FUNCTION to display the splash screen
 void splashScreen(){//AKILA
-    for(int i = 0; i < frameWidthConstant; i++) cout <<"-";
-    cout << endl;
     splashScreenDraw();
-    for(int k = 0; k < frameWidthConstant; k++) cout <<"-";
     this_thread::sleep_for(chrono::seconds(splashScreenRefresh));    //sleep console for specified time
     mainMenu();                                                      //link to mainMenu Function
 
@@ -249,9 +247,8 @@ void creditsPage(){//AKILA
 }
 
 //FUNCTION to handle the score card window
-int scoreDisplay(){//AKILA
-    system("cls");                              //Clear the terminal
-    cout << "Display Scorecard";
+int scoreDisplay(){//AKILA                           
+    scoreDisplayInterface();
 
     returnToMainMenu();
     return(0);
@@ -280,6 +277,7 @@ int gameInitialize(){//AKILA
     //Draw an interface to Get users Name
     // Input User name to store marks
     //On completion, call the game logic system
+    system("cls");
     cout << "Enter Player Name: ";
     cin >> playerName;
     system("cls");
@@ -297,7 +295,7 @@ int gameInitialize(){//AKILA
         }
         input();                                                            //Call the inputs function
         keyBoardLogic();                                                    //Call the keyboard logic function
-        ballFall();                                             //Call the Function to make the Ball Fall
+        ballFall();                                                         //Call the Function to make the Ball Fall
         gamePhaseChanger();                                                 //Changes the Phase of Gameplay based on score
         //Conditions to loop the game and Mark the scores
         if((dynamicDistanceAdjust <= 0) && (dynamicDistanceAdjustNegetive <= 2)){
@@ -585,61 +583,63 @@ int main(){
 
 void splashScreenDraw(){
     system("cls");
-    cout << "                                                                                                  " << endl;
-    cout << "       BTTTTTTTTTTTTb                        BALl     EBAl                                        " << endl;
-    cout << "       BALLBOUNCEBALLBb                      BALl     EBAl                                        " << endl;
-    cout << "       BALl        )LBOb                     BALl     EBAl                                        " << endl;
-    cout << "       BALl       )LLBOp                     BALl     EBAl                                        " << endl;
-    cout << "       BALLBOUNCEBALLp      TTOTTTTDT0       BALl     EBAl                                        " << endl;
-    cout << "       BALLBOUNCEBALLb      LBBALLBOUNl      BALl     EBAl                                        " << endl;
-    cout << "       BALl       )LLBOb            UNl      BALl     EBAl                                        " << endl;
-    cout << "       BALl        )LBOU    LBBALLBOUNl      BALl     EBAl                                        " << endl;
-    cout << "       BALLBOUNCEBALLBOp    LBB     UNl      BALb     EBAb                                        " << endl;
-    cout << "       BALLBOUNCEBALLB0     LBBALLBOUNC0     BALBl    EBALl                                       " << endl;
-    cout << "                                                                                                  " << endl;
-    cout << "                                                                                                  " << endl;
-    cout << "       BALLBOUNCEBALb                                                                             " << endl;
-    cout << "       BALLBOUNCEBALLBb                                                                           " << endl;
-    cout << "       BALL         LBOb                                                                          " << endl;
-    cout << "       BALL        LLBOp                             LLBO0                                        " << endl;
-    cout << "       BALLBOUNCEBALLp     LLBBALLBOU   BALl    LLBl   lCE0 0LBBA     NCEBALLBBA    UNCEBALLBB0   " << endl;
-    cout << "       BALLBOUNCEBALLb    lLLB    BOUN  BALl    LLBl   lCEBALLBBALl   UNCE   LBBA   OUN     LBBl  " << endl;
-    cout << "       BALL        LLBOb  lLLB    BOUN  BALl    LLBl   lCEB    BALl   UNC           OUN     LBB0  " << endl;
-    cout << "       BALL         LBOU  lLLB    BOUN  BALl    LLBl   lCEB    BALl   UNC           OUNCEBALLB0   " << endl;
-    cout << "       BALLBOUNCEBALLBOp  lLLB   LBOUN  BALL0  ALLBl   lCEB    BALl   UNCE   LBBA   OUN0          " << endl;
-    cout << "       BALLBOUNCEBALLBp    0LBBALLBOU    0ALLBBALL0    lCEB    BALl    NCEBALLBBA    UNCEBALLBB   " << endl;
-    cout << "                                                                                                  " << endl;
-    cout << "                                                                                                  " << endl;
+    cout<<  "_____________________________________________________________________________________________________________ " << endl;
+    cout << "|                                                                                                           | " << endl;
+    cout << "|       BTTTTTTTTTTTTb                        BALl     EBAl                                                 | " << endl;
+    cout << "|       BALLBOUNCEBALLBb                      BALl     EBAl                                                 | " << endl;
+    cout << "|       BALl        )LBOb                     BALl     EBAl                                                 | " << endl;
+    cout << "|       BALl       )LLBOp                     BALl     EBAl                                                 | " << endl;
+    cout << "|       BALLBOUNCEBALLp      TTOTTTTDT0       BALl     EBAl                                                 | " << endl;
+    cout << "|       BALLBOUNCEBALLb      LBBALLBOUNl      BALl     EBAl                                                 | " << endl;
+    cout << "|       BALl       )LLBOb            UNl      BALl     EBAl                                                 | " << endl;
+    cout << "|       BALl        )LBOU    LBBALLBOUNl      BALl     EBAl                                                 | " << endl;
+    cout << "|       BALLBOUNCEBALLBOp    LBB     UNl      BALb     EBAb                                                 | " << endl;
+    cout << "|       BALLBOUNCEBALLB0     LBBALLBOUNC0     BALBl    EBALl                                                | " << endl;
+    cout << "|                                                                                                           | " << endl;
+    cout << "|                                                                                                           | " << endl;
+    cout << "|       BALLBOUNCEBALb                                                                                      | " << endl;
+    cout << "|       BALLBOUNCEBALLBb                                                                                    | " << endl;
+    cout << "|       BALL         LBOb                                                                                   | " << endl;
+    cout << "|       BALL        LLBOp                             LLBO0                                                 | " << endl;
+    cout << "|       BALLBOUNCEBALLp     LLBBALLBOU   BALl    LLBl   lCE0 0LBBA     NCEBALLBBA    UNCEBALLBB0            | " << endl;
+    cout << "|       BALLBOUNCEBALLb    lLLB    BOUN  BALl    LLBl   lCEBALLBBALl   UNCE   LBBA   OUN     LBBl           | " << endl;
+    cout << "|       BALL        LLBOb  lLLB    BOUN  BALl    LLBl   lCEB    BALl   UNC           OUN     LBB0           | " << endl;
+    cout << "|       BALL         LBOU  lLLB    BOUN  BALl    LLBl   lCEB    BALl   UNC           OUNCEBALLB0            | " << endl;
+    cout << "|       BALLBOUNCEBALLBOp  lLLB   LBOUN  BALL0  ALLBl   lCEB    BALl   UNCE   LBBA   OUN0                   | " << endl;
+    cout << "|       BALLBOUNCEBALLBp    0LBBALLBOU    0ALLBBALL0    lCEB    BALl    NCEBALLBBA    UNCEBALLBB            | " << endl;
+    cout << "|                                                                                                           | " << endl;
+    cout<<  "_____________________________________________________________________________________________________________ " << endl;
 }
 
 
 
 void gameMenuScreenDraw(){
     system("cls");
-	cout<< "  _____________________________________________________________________________________________________________   "<< endl;  
-	cout<< " |       _____________________________________________________            ...      \\  |  /      ...            |   "<< endl;
-	cout<< " |      |                                                     |         .@ @ @.     \\ | /     .@ @ @.          |   "<< endl;
-	cout<< " |      |     G G G           A       M         M  E E E E    |        '@ @ @ @.  ___\\|/___  '@ @ @ @.         |   "<< endl;
-	cout<< " |      |   G       G        A A      M M     M M  E          |        '@ @ @ @.     /|\\     '@ @ @ @'         |  "<< endl;
-	cout<< " |      |  G                A   A     M  M   M  M  E          |         '@ @ @'     / | \\      @ @ @           |   "<< endl;
-	cout<< " |      |  G     G G G     A A A A    M   M M   M  E E E      |           '''      /  |  \\      '''            |   "<< endl;
-	cout<< " |      |  G       G G    A       A   M    M    M  E         /______________________________________________   |   "<< endl;
-	cout<< " |      |   G     G  G   A         A  M         M  E        /                                               |  |  "<< endl;
-	cout<< " |      |     G G    G  A           A M         M  E E E E /  M        M  E E E E E  N       N  U        U  |  |   "<< endl;
-	cout<< " |      |_________________________________________________/   M M    M M  E          N N     N  U        U  |  |   "<< endl;
-	cout<< " |                                                  |         M  M  M  M  E          N  N    N  U        U  |  |   "<< endl;
-	cout<< " |           /\\        /\\        /\\                 |         M   M    M  E E E      N   N   N  U        U  |  |"<< endl;
-	cout<< " |          /  \\      /  \\      /  \\                |         M        M  E          N    N  N  U        U  |  |"<< endl;
-	cout<< " |         /|  |\\    /|  |\\    /|  |\\               |         M        M  E          N     N N   U      U   |  |"<< endl;
-	cout<< " |          |  |      |  |      |  |                |         M        M  E E E E E  N       N    U U U     |  |   "<< endl;
-	cout<< " |          |  |      |  |      |  |                |_______________________________________________________|  |   "<< endl;
-	cout<< " |          |__|      |__|      |__|                                                                           |   "<< endl;
-    cout<< " |           )(        )(        )(           1.  New Game                                                     |  "<<endl;
-    cout<< " |          (  )      (  )      (  )          2.  Score Details                                                |   "<<endl;
-    cout<< " |           )(        )(        )(           3.  How to play                                                  |   "<<endl;
-    cout<< " |          (  )      (  )      (  )          4.  Credits                                                      |   "<<endl;
-    cout<< " |           )(        )(        )(           5.  Exit                                                         |    "<<endl;
-    cout<< " |                                                                                                             |    "<<endl;
+	cout<< "  _____________________________________________________________________________________________________________     " << endl;  
+	cout<< " |       _____________________________________________________            ...      \\  |  /      ...            |   " << endl;
+	cout<< " |      |                                                     |         .@ @ @.     \\ | /     .@ @ @.          |   " << endl;
+	cout<< " |      |     G G G           A       M         M  E E E E    |        '@ @ @ @.  ___\\|/___  '@ @ @ @.         |   " << endl;
+	cout<< " |      |   G       G        A A      M M     M M  E          |        '@ @ @ @.     /|\\     '@ @ @ @'         |   " << endl;
+	cout<< " |      |  G                A   A     M  M   M  M  E          |         '@ @ @'     / | \\      @ @ @           |   " << endl;
+	cout<< " |      |  G     G G G     A A A A    M   M M   M  E E E      |           '''      /  |  \\      '''            |   " << endl;
+	cout<< " |      |  G       G G    A       A   M    M    M  E         /______________________________________________   |    " << endl;
+	cout<< " |      |   G     G  G   A         A  M         M  E        /                                               |  |    " << endl;
+	cout<< " |      |     G G    G  A           A M         M  E E E E /  M        M  E E E E E  N       N  U        U  |  |    " << endl;
+	cout<< " |      |_________________________________________________/   M M    M M  E          N N     N  U        U  |  |    " << endl;
+	cout<< " |                                                  |         M  M  M  M  E          N  N    N  U        U  |  |    " << endl;
+	cout<< " |           /\\        /\\        /\\                 |         M   M    M  E E E      N   N   N  U        U  |  | " << endl;
+	cout<< " |          /  \\      /  \\      /  \\                |         M        M  E          N    N  N  U        U  |  | " << endl;
+	cout<< " |         /|  |\\    /|  |\\    /|  |\\               |         M        M  E          N     N N   U      U   |  | " << endl;
+	cout<< " |          |  |      |  |      |  |                |         M        M  E E E E E  N       N    U U U     |  |    " << endl;
+	cout<< " |          |  |      |  |      |  |                |_______________________________________________________|  |    " << endl;
+	cout<< " |          |__|      |__|      |__|                                                                           |    " << endl;
+    cout<< " |           )(        )(        )(           1.  New Game                                                     |    " << endl;
+    cout<< " |          (  )      (  )      (  )          2.  Score Details                                                |    " << endl;
+    cout<< " |           )(        )(        )(           3.  How to play                                                  |    " << endl;
+    cout<< " |          (  )      (  )      (  )          4.  Credits                                                      |    " << endl;
+    cout<< " |           )(        )(        )(           5.  Exit                                                         |    " << endl;
+    cout<< " |                                                                                                             |    " << endl;
+    cout<< " ______________________________________________________________________________________________________________     " << endl;
     cout<<"              Enter your choice  >>>>  ";
 }
 
@@ -672,21 +672,57 @@ void gameOverInterface(){
 
 void instructionInterface(){
     system("cls");
-    // Displaying the title
-    cout << setw(62) << "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII\n\n\n";
-    cout << setw(53) << "IIIIIIIIIII    Instructions    IIIIIIIIIII\n\n\n";
-    cout << setw(62) << "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII\n\n\n";
-    cout << endl;
-    // Displaying the game instructions centered within a 25x100 frame
-    cout << setw(53) << "IIIIIIIIIII    S - Move Down    IIIIIIIIIII\n";
-    cout << setw(53) << "IIIIIIIIIII    W - Move Up      IIIIIIIIIII\n";
-    cout<<"\n\n\n\n";
-  
-    cout << setw(62) << "IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII\n";
-    cout << endl;
+	cout << "____________________________________________________________________________________________________"<< endl;
+	cout << "|                                                                                                  |" << endl;
+	cout << "|    H    H  OOOOOO   W     W      TTTTTTTT   OOOOOO         PPPPPP   L       AAAAAA    Y     Y    |" << endl;
+	cout << "|    H    H  O    O   W     W         Tl      O    O         P    P   L       A    A    Y     Y    |" << endl;
+	cout << "|    HHHHHH  O    O   W  W  W         Tl      O    O         PPPPPP   L       AAAAAA    YYYYYYY    |" << endl;
+	cout << "|    H    H  O    O   W  W  W         Tl      O    O         P        L       A    A          Y    |" << endl;	
+	cout << "|    H    H  OOOOOO   WWW WWW         Tl      OOOOOO         P        LLLLL   A    A     YYYYYY    |" << endl;
+	cout << "|                                                                                                  |" << endl; 
+	cout << "|                                                                                                  |" << endl;	
+	cout << "|                                                                               ..                 |" << endl;
+	cout << "| Avoid the Ball Landing on the Spikes                                       ,@@@@@@,              |" << endl;
+	cout << "|                                                                           @@@@@@@@@@             |" << endl;
+	cout << "| Use 'W' to mall the ball Up inorder to Avoid Spkies                      @@@@@@@@@@@@            |" << endl;
+	cout << "|                                                                           @@@@@@@@@@             |" << endl;
+	cout << "| Clear as many Spikes you can in order to score Points                      '@@@@@@'  A           |" << endl;
+	cout << "|                                                                               ''    AAA          |" << endl;
+	cout << "|                                                                                    AAAAA         |" << endl;
+	cout << "|                                                                                   AAAAAAA        |" << endl;
+	cout << "|                                                                                                  |" << endl;
+	cout << "|                                                                                                  |" << endl;
+	cout << "|              Earn "<<setw(2) << gameScoreIncrementConstant << " marks for clearing any Obstacle                                             |" << endl;
+	cout << "|                                                                                                  |" << endl;
+	cout << "|              Earn "<<setw(2) << "05" << " bonus Marks for keeping the ball On the Ground                              |" << endl;
+	cout << "|                                                                                                  |" << endl;
+	cout << "|                                                                                                  |" << endl;	
+	cout << "____________________________________________________________________________________________________" << endl;
+
 }
 
 void scoreDisplayInterface(){
+    system("cls");
+    cout << "____________________________________________________________________________________________________" << endl;
+	cout << "|                                                                                                  |" << endl;
+	cout << "|        SSSSSSSSSS     CCCCCCCCCC     OOOOOOOOOO     RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
+	cout << "|        SSSSSSSSSS     CCCCCCCCCC     OOOOOOOOOO     RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
+	cout << "|        SSSS           CCCC           OOOO  OOOO     RRRR   RRR     EEEE           SSSS           |" << endl;
+	cout << "|        SSSSSSSSSS     CCCC           OOOO  OOOO     RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
+	cout << "|        SSSSSSSSSS     CCCC           OOOO  OOOO     RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS     |  " << endl;
+	cout << "|             SSSSS     CCCC           OOOO  OOOO     RRRR RRRR      EEEE                 SSSS     |" << endl;
+	cout << "|        SSSSSSSSSS     CCCCCCCCCC     OOOOOOOOOO     RRRR  RRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
+	cout << "|        SSSSSSSSSS     CCCCCCCCCC     OOOOOOOOOO     RRRR   RRRR    EEEEEEEEEE     SSSSSSSSSS     |" << endl;
+	cout << "|                                                                                                  |" << endl;
+	cout << "|" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "   |" <<endl;
+	cout << "|" << left   << setw(29) <<"" << "|"<< setw(15) << "Player Name " << "|" << setw(10) << "Score" << "|" << setw(41) << "" << "|" << endl;
+	cout << "|" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "   |" <<endl;
+	for(int i = 0; i < 10; i++ ){
+		cout << left << "|"<< setw(29) << "" << "|" << setw(15) << playerStatArray[i].playerName << "|" << setw(10) << playerStatArray[i].playerScore  << "|"<< setw(41) << "" << "|" << endl;
+	}
+	cout << "|" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "   |" <<endl;	
+	cout << "|                                                                                                  |" << endl;
+	cout << "____________________________________________________________________________________________________" << endl;
 
 
 }
