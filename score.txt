@@ -5,3 +5,6 @@ Akila,3
 Ghost,5
 Hello,10
 Akila,240
+ABC,16
+Akila,136
+ASD,36

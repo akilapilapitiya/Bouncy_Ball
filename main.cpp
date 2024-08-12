@@ -51,6 +51,10 @@ const int dynamicDistanceAdjustConstant = 60;           //Initial Distance Betwe
 const int ballPositionFromTopConstant = 17;             //At startup Ball Position   DEFAULT :: 17 (do not exceed)
 const int dynamicDistanceAdjustNegetiveConstant = 30;   //Initial Distance between left wall and the obstacle when dynamicDistanceAdjust == 0
 
+// Game Time Related Constants
+const int gameTimeReset = 0;                            //RESETS the Game Time
+const int gameplayTimeUpdater = 30;                     //Gameplay time in Seconds(Try to add values divisible by sleepTimeConstant)
+const int gameplayTimeConstant = (gameplayTimeUpdater * 1000);  //Convert gameplay time seconds to milliseconds
 
 //Ball Related Controls
 const int maximumHeightTheBallCanMoveConstant = 2;      //Maximum height the ball is allowed to move
@@ -60,6 +64,7 @@ const int ballFallRateConstant = 2;                     //Rate in which the ball
 
 //Player Management and Score Maps
 const int gameScoreIncrementConstant = 5;               //Increment of score for avoiding a single Obstacle
+const int gameScoreBonusConstant = 1;                   //Bonus for keeping the ball on the ground
 const int gameScoreReset = 0;                           //Reset Value for the Game Score
 const string playerNameReset = "";                      //Reset Value for Player name
 const int numberOfPlayersExpectedConstant = 10;         //Size of the playerStatArray
@@ -115,6 +120,10 @@ int gameScore;                      //Ingame Variable to store the players score
 string playerName;                  // Ingame Variable to store the players name
 bool highScoreStatus;               //Variable to handle the High Score Status
 
+//Game Time Controls and Reset Functionality
+int gameTime;                       //Time the Game is Played
+int remainingTime;                  //Time Left to play
+
 // Global Variables to controll gameplay Speeds(Relative to game Scores)
 int gameSpeedControlPointer;        //Variable to locate Array Vaslues in the game speed changer array
 int obstacleMoveRate;               //Variable to control the Rate in which the obstacles Move
@@ -151,6 +160,7 @@ int gameInitialize();                   //main Menu Connect for new Game
 void gameVariableResetFunction();       //Resets all variable Data for a new Game
 void input();                           //Function to handle keyboard input
 void keyBoardLogic();                   //Function to bind ingame Actions with Keyboard logics
+void timeHandler();                     //Function to Control Game Played Time
 int gameDraw();                         //Draw the Game in all Instances
 void ballFall();                        //Make the Ball Fall Down
 void gamePhaseChanger();                //Change the game spped based on the marks gained
@@ -293,11 +303,13 @@ int gameInitialize(){//AKILA
         }else if(dynamicDistanceAdjustNegetive > 2){                        //Condition if the obstacle is under or left of ball
             dynamicDistanceAdjustNegetive -= obstacleMoveRate;              //Move the obstacle left
         }
+        timeHandler();                                                      //Update Game Time
         input();                                                            //Call the inputs function
         keyBoardLogic();                                                    //Call the keyboard logic function
         ballFall();                                                         //Call the Function to make the Ball Fall
         gamePhaseChanger();                                                 //Changes the Phase of Gameplay based on score
         //Conditions to loop the game and Mark the scores
+        gameScore += gameScoreBonusConstant;
         if((dynamicDistanceAdjust <= 0) && (dynamicDistanceAdjustNegetive <= 2)){
             dynamicDistanceAdjust = dynamicDistanceAdjustConstant;                 //Reset dynamicDistanceAdjust to default
             dynamicDistanceAdjustNegetive = dynamicDistanceAdjustNegetiveConstant; //Reset dynamicDistanceAdjustNegetive to default
@@ -327,6 +339,10 @@ void gameVariableResetFunction(){
     //Player Info Resets
     playerName = playerNameReset;                   //Reset thePlayer Name to NULL
     gameScore = gameScoreReset;                     //Reset the game score to 0
+
+    //Time Corrections
+    gameTime = gameTimeReset;
+    remainingTime = gameplayTimeUpdater;
 
 }
 
@@ -369,6 +385,19 @@ void keyBoardLogic(){//CHANUKA
     }
 
 }
+
+//Function to Handle inGameTime
+void timeHandler(){
+    if(gameTime >= gameplayTimeConstant){
+        gameOverStatus = true;
+    }
+    else{
+        gameTime += sleepTimeConstant;
+    }
+    remainingTime = ((gameplayTimeConstant - gameTime) / 1000);
+
+}
+
 
 //FUNCTION to draw the game in all 3 Instances
 int gameDraw(){//AKILA
@@ -436,7 +465,7 @@ int gameDraw(){//AKILA
     cout << endl;
 
     //Game Score Display
-    cout << "SCORE: " << gameScore;
+    cout << "SCORE: "  << setw(4)<< gameScore << setw(30) << "" << "Remaining Time: " << setw(6) << remainingTime ;
 
     return(0);
 }
@@ -705,14 +734,14 @@ void scoreDisplayInterface(){
     system("cls");
     cout << "____________________________________________________________________________________________________" << endl;
 	cout << "|                                                                                                  |" << endl;
-	cout << "|        SSSSSSSSSS     CCCCCCCCCC     OOOOOOOOOO     RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
+	cout << "|        SSSSSSSSSS     CCCCCCCCCC      OOOOOOOO      RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
 	cout << "|        SSSSSSSSSS     CCCCCCCCCC     OOOOOOOOOO     RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
 	cout << "|        SSSS           CCCC           OOOO  OOOO     RRRR   RRR     EEEE           SSSS           |" << endl;
 	cout << "|        SSSSSSSSSS     CCCC           OOOO  OOOO     RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
 	cout << "|        SSSSSSSSSS     CCCC           OOOO  OOOO     RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS     |  " << endl;
 	cout << "|             SSSSS     CCCC           OOOO  OOOO     RRRR RRRR      EEEE                 SSSS     |" << endl;
 	cout << "|        SSSSSSSSSS     CCCCCCCCCC     OOOOOOOOOO     RRRR  RRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
-	cout << "|        SSSSSSSSSS     CCCCCCCCCC     OOOOOOOOOO     RRRR   RRRR    EEEEEEEEEE     SSSSSSSSSS     |" << endl;
+	cout << "|        SSSSSSSSSS     CCCCCCCCCC      OOOOOOOO      RRRR   RRRR    EEEEEEEEEE     SSSSSSSSSS     |" << endl;
 	cout << "|                                                                                                  |" << endl;
 	cout << "|" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "   |" <<endl;
 	cout << "|" << left   << setw(29) <<"" << "|"<< setw(15) << "Player Name " << "|" << setw(10) << "Score" << "|" << setw(41) << "" << "|" << endl;
