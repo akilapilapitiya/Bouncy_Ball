@@ -8,3 +8,6 @@ Akila,240
 ABC,16
 Akila,136
 ASD,36
+Hello,136
+aaa,16
+qqq,136

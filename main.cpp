@@ -53,6 +53,7 @@ const int ballPositionFromTopConstant = 17;             //At startup Ball Positi
 const int dynamicDistanceAdjustNegetiveConstant = 30;   //Initial Distance between left wall and the obstacle when dynamicDistanceAdjust == 0
 
 // Game Time Related Constants
+const bool timeOutStatusConstant = false;                     //Default time out Status
 const int gameTimeReset = 0;                            //RESETS the Game Time
 const int gameplayTimeUpdater = 30;                     //Gameplay time in Seconds(Try to add values divisible by sleepTimeConstant)
 const int gameplayTimeConstant = (gameplayTimeUpdater * 1000);  //Convert gameplay time seconds to milliseconds
@@ -134,6 +135,7 @@ string playerName;                  // Ingame Variable to store the players name
 bool highScoreStatus;               //Variable to handle the High Score Status
 
 //Game Time Controls and Reset Functionality
+bool timeOutStatus;                       //Variable to sotre timeout status
 int gameTime;                       //Time the Game is Played
 int remainingTime;                  //Time Left to play
 
@@ -166,8 +168,6 @@ void creditsPage();         //Credits Page from main Menu
 int scoreDisplay();         //Display Scores
 void gameInstructions();    //Instruction Page for the game
 
-
-
 //GAME LOGIC RELATED
 int gameInitialize();                   //main Menu Connect for new Game
 void gameVariableResetFunction();       //Resets all variable Data for a new Game
@@ -183,6 +183,7 @@ int highScoreIdentifier();              //Identify if the last upadted score is 
 
 //GAME STARTUP FUNCTIONS
 int gameStartUp();                     //All Tasks Handled At Game Start
+void fileCreateFunction();             //Create 'score.txt' if it does not exist
 int scoreFileReader();                 //Read the Score File and Update the array
 void scoreArraySort();                 //Sort the ScoreArray in descending order
 
@@ -192,6 +193,9 @@ void gameMenuScreenDraw();              //Game menu Design
 void gameOverInterface();               //Game Over Display Design
 void instructionInterface();            //Instructions Interface Design 
 void scoreDisplayInterface();           //Draw player Scores
+void highScoreGameOverInterface();      //Draw High Score when Game Over
+void creditsInterface();                //Draw ingame Credits display interface
+void timeOutGameOverInterface();        //Draw the game over interface when there is a timeout
 
 
 //TESTING FUNCTIONS
@@ -354,8 +358,9 @@ void gameVariableResetFunction(){
     gameScore = gameScoreReset;                     //Reset the game score to 0
 
     //Time Corrections
-    gameTime = gameTimeReset;
-    remainingTime = gameplayTimeUpdater;
+    timeOutStatus = timeOutStatusConstant;          //Reset Time Out Status Constant
+    gameTime = gameTimeReset;                       //Reset game time
+    remainingTime = gameplayTimeUpdater;            //Reset remaining time
 
 }
 
@@ -402,6 +407,7 @@ void keyBoardLogic(){//CHANUKA
 //Function to Handle inGameTime
 void timeHandler(){
     if(gameTime >= gameplayTimeConstant){
+        timeOutStatus = true;
         gameOverStatus = true;
     }
     else{
@@ -503,7 +509,14 @@ void gamePhaseChanger(){
 void gameOverDisplay(){//AKILA
     system("cls");
     dataWriteFunction();            //Call Function to Write the data to the file
-    gameOverInterface();
+    if(highScoreStatus == true){
+        highScoreGameOverInterface();         //Call High Score Game Over Interface
+    }else if(timeOutStatus == true){
+             timeOutGameOverInterface();     //Call time Out Game Over Interface
+        }else{
+            gameOverInterface();       //Call Game Over Interface
+    }
+    returnToMainMenu();
     gameVariableResetFunction();    //Call Function to Reset All Dynamic Data
 }
 
@@ -543,12 +556,21 @@ int highScoreIdentifier(){
 
 //FUNCTION for the GAME STARTUP
 int gameStartUp(){
+    fileCreateFunction();                        //Call thew file Create Function
     scoreFileReader();                          //Read the Score File in the Array
     scoreArraySort();                           //Sort the User Details Array in Ascending Order
 
-
-
     return(0);
+}
+
+//FUNCTION to Create 'score.txt' if it doesn't exist
+void fileCreateFunction(){
+    fstream fileCreator;
+    fileCreator.open("score.txt", ios::app);
+    if(!fileCreator.is_open()){
+        cout << "Error in opening the File" << endl;
+    }
+    fileCreator.close();
 }
 
 
@@ -772,16 +794,23 @@ void scoreDisplayInterface(){
 	cout << "|" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "   |" <<endl;	
 	cout << "|                                                                                                  |" << endl;
 	cout << "____________________________________________________________________________________________________" << endl;
+}
 
 
+void highScoreGameOverInterface(){
+    cout << "High Score Game Over " << endl;
 }
 
 void creditsInterface(){
-    //fdgfdhbfgbgnbfgnfg
+    cout << "Credits Interface " << endl;
+}
+
+void timeOutGameOverInterface(){
+    cout << "Time Out Game OVer interface" << endl;
 }
 
 
-
+//-------------------------------------------------------------------------------------------------------------------------
 
 //                                   T E S T I N G   A S S I S T A N C E
 
