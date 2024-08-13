@@ -71,6 +71,7 @@ const int gameScoreReset = 0;                           //Reset Value for the Ga
 const string playerNameReset = "";                      //Reset Value for Player name
 const int numberOfPlayersExpectedConstant = 10;         //Size of the playerStatArray
 const bool highScoreStatusConstant = false;             //Reset the high score status to false
+const int timeoutDisplayRefreshConstant = 2;            //Number Of seconds the timeout display must be shown
 
 //Global Structure named playerStats
 struct playerStats{
@@ -89,6 +90,10 @@ int gameSpeedControllArray[] = {20,     //gameSpeedControllArray[0]  First Speed
 
 const int gameSpeedControlPointerConstant = 0; //Reset check loop value to zero
 const int speedDeltaConstant = 4;               //Rate of change in obstacle movement speed
+
+//Game Exit Screen Refresh timer
+const int exitScreenRefreshConstant = 3;        //Refresh time of the exit screen in seconds
+
 
 
 //Colors for Designer
@@ -196,6 +201,7 @@ void scoreDisplayInterface();           //Draw player Scores
 void highScoreGameOverInterface();      //Draw High Score when Game Over
 void creditsInterface();                //Draw ingame Credits display interface
 void timeOutGameOverInterface();        //Draw the game over interface when there is a timeout
+void goodByeExitInterface();            //Displayed at game Exit
 
 
 //TESTING FUNCTIONS
@@ -234,6 +240,9 @@ int mainMenu(){//AKILA
     }else if (mainMenuUserInput == 4){
         creditsPage();
     }else if (mainMenuUserInput == 5){
+        goodByeExitInterface();
+        this_thread::sleep_for(chrono::seconds(exitScreenRefreshConstant));    //sleep console for specified time
+        system("cls");
         return(0);
     }else{
         system("cls");
@@ -513,6 +522,8 @@ void gameOverDisplay(){//AKILA
         highScoreGameOverInterface();         //Call High Score Game Over Interface
     }else if(timeOutStatus == true){
              timeOutGameOverInterface();     //Call time Out Game Over Interface
+             this_thread::sleep_for(chrono::seconds(timeoutDisplayRefreshConstant));    //sleep console for specified time
+             gameOverInterface(); 
         }else{
             gameOverInterface();       //Call Game Over Interface
     }
@@ -636,6 +647,7 @@ int main(){
     splashScreen();
     //gameInitialize();
 
+
    return (0); 
 }
 
@@ -648,34 +660,32 @@ int main(){
 void splashScreenDraw(){
     system("cls");
     HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(h, blueColor);
-    cout<<  "_____________________________________________________________________________________________________________ " << endl;
-    cout << "|                                                                                                           | " << endl;
-    cout << "|       BTTTTTTTTTTTTb                        BALl     EBAl                                                 | " << endl;
-    cout << "|       BALLBOUNCEBALLBb                      BALl     EBAl                                                 | " << endl;
-    cout << "|       BALl        )LBOb                     BALl     EBAl                                                 | " << endl;
-    cout << "|       BALl       )LLBOp                     BALl     EBAl                                                 | " << endl;
-    cout << "|       BALLBOUNCEBALLp      TTOTTTTDT0       BALl     EBAl                                                 | " << endl;
-    cout << "|       BALLBOUNCEBALLb      LBBALLBOUNl      BALl     EBAl                                                 | " << endl;
-    cout << "|       BALl       )LLBOb            UNl      BALl     EBAl                                                 | " << endl;
-    cout << "|       BALl        )LBOU    LBBALLBOUNl      BALl     EBAl                                                 | " << endl;
-    cout << "|       BALLBOUNCEBALLBOp    LBB     UNl      BALb     EBAb                                                 | " << endl;
-    cout << "|       BALLBOUNCEBALLB0     LBBALLBOUNC0     BALBl    EBALl                                                | " << endl;
-    cout << "|                                                                                                           | " << endl;
-    cout << "|                                                                                                           | " << endl;
-    cout << "|       BALLBOUNCEBALb                                                                                      | " << endl;
-    cout << "|       BALLBOUNCEBALLBb                                                                                    | " << endl;
-    cout << "|       BALL         LBOb                                                                                   | " << endl;
-    cout << "|       BALL        LLBOp                             LLBO0                                                 | " << endl;
-    cout << "|       BALLBOUNCEBALLp     LLBBALLBOU   BALl    LLBl   lCE0 0LBBA     NCEBALLBBA    UNCEBALLBB0            | " << endl;
-    cout << "|       BALLBOUNCEBALLb    lLLB    BOUN  BALl    LLBl   lCEBALLBBALl   UNCE   LBBA   OUN     LBBl           | " << endl;
-    cout << "|       BALL        LLBOb  lLLB    BOUN  BALl    LLBl   lCEB    BALl   UNC           OUN     LBB0           | " << endl;
-    cout << "|       BALL         LBOU  lLLB    BOUN  BALl    LLBl   lCEB    BALl   UNC           OUNCEBALLB0            | " << endl;
-    cout << "|       BALLBOUNCEBALLBOp  lLLB   LBOUN  BALL0  ALLBl   lCEB    BALl   UNCE   LBBA   OUN0                   | " << endl;
-    cout << "|       BALLBOUNCEBALLBp    0LBBALLBOU    0ALLBBALL0    lCEB    BALl    NCEBALLBBA    UNCEBALLBB            | " << endl;
-    cout << "|                                                                                                           | " << endl;
-    cout<<  "_____________________________________________________________________________________________________________ " << endl;
-    	SetConsoleTextAttribute(h, whiteColor);
+    cout<<"   ______________________________________________________________________________________________________________  "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |    BOUNCYBALLBOUNCYBAL            UNCYBAL    BOU     LLB  BOUNC       UNC     NCYBAL     BOU       BOU       | "<<endl;
+    cout<<"  |    BOUNCYBALLBOUNCYBALLBO        OUNCYBALL   BOU     LLB  BOUNCY      UNC   OUNCYBALLB    OUN     LBO        | "<<endl;
+    cout<<"  |    BOUNCY         BALLBOUN      BOU     LLB  BOU     LLB  BOU CYB     UNC  BOUN     LBA    UNC   LLB         | "<<endl;
+    cout<<"  |    BOUNCY            LLBOUNCY   BOU     LLB  BOU     LLB  BOU  YBA    UNC  BOU              NCY ALL          | "<<endl;
+    cout<<"  |    BOUNCY             LBOUNCYB  BOU     LLB  BOU     LLB  BOU   BAL   UNC  BOU               CYBAL           | "<<endl;
+    cout<<"  |    BOUNCY             LBOUNCY9  BOU     LLB  BOU     LLB  BOU    ALL  UNC  BOU                YBA            | "<<endl;
+    cout<<"  |    BOUNCY             LBOUNCYB  BOU     LLB  BOU     LLB  BOU     LLB UNC  BOUN     LBA       YBA            | "<<endl;
+    cout<<"  |    BOUNCY            LLBOUNCY    OUNCYBALL    OUNCYBALL   BOU      LBOUNC   OUNCYBALLB        YBA            | "<<endl;
+    cout<<"  |    BOUNCY         BALLBOUN        UNCYBAL      UNCYBAL    BOU       BOUNC     NCYBAL          YBA            | "<<endl;
+    cout<<"  |    BOUNCYBALLBOUNCYBALLBO                                                        _____________________       | "<<endl;
+    cout<<"  |    BOUNCYBALLBOUNCYBALL                                                          |   =========       |       | "<<endl;
+    cout<<"  |    BOUNCYBALLBOUNCYBALLBO                L           BOU         BOU             |   A A A A A       |       | "<<endl;
+    cout<<"  |    BOUNCY         BALLBOUN              LLB          BOU         BOU             |    A A A A @      |       | "<<endl;
+    cout<<"  |    BOUNCY            LLBOUNCY          ALLBO         BOU         BOU             |   @ A A A    @    |       | "<<endl;
+    cout<<"  |    BOUNCY             LBOUNCYB        BAL BOU        BOU         BOU             |  @   A A      @   |       | "<<endl;
+    cout<<"  |    BOUNCY             LBOUNCYB       YBA   OUN       BOU         BOU             |  @    A    A  @   |       | "<<endl;
+    cout<<"  |    BOUNCY             LBOUNCYB      CYB     UNC      BOU         BOU             |  @        A A     |       | "<<endl;
+    cout<<"  |    BOUNCY            LLBOUNCY      NCYBALLBOUNCY     BOU         BOU             |   @      A A A    |       | "<<endl;
+    cout<<"  |    BOUNCY         BALLBOUN        UNCYBALLBOUNCYB    BOU         BOU             |     @ @ A A A A   |       | "<<endl;
+    cout<<"  |    BOUNCYBALLBOUNCYBALLBO        OUN           YBA   BOUNCYBALL  BOUNCYBALL      |        A A A A A  |       | "<<endl;
+    cout<<"  |    BOUNCYBALLBOUNCYBAL          BOU             BAL  BOUNCYBALL  BOUNCYBALL      |       =========== |       | "<<endl;
+    cout<<"  |                                                                                  |___________________|       | "<<endl;
+    cout<<"  |______________________________________________________________________________________________________________| "<<endl;
 }
 
 
@@ -772,7 +782,6 @@ void instructionInterface(){
 void scoreDisplayInterface(){
     system("cls");
     HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(h, blueColor); 
     cout << "____________________________________________________________________________________________________" << endl;
 	cout << "|                                                                                                  |" << endl;
 	cout << "|        SSSSSSSSSS     CCCCCCCCCC      OOOOOOOO      RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
@@ -792,13 +801,35 @@ void scoreDisplayInterface(){
 		cout << left << "|"<< setw(29) << "" << "|" << setw(15) << playerStatArray[i].playerName << "|"  << right << setw(10) << playerStatArray[i].playerScore   << left << "|"<< setw(41) << "" << "|" << endl;
 	}
 	cout << "|" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "   |" <<endl;	
-	cout << "|                                                                                                  |" << endl;
-	cout << "____________________________________________________________________________________________________" << endl;
+	cout << "|__________________________________________________________________________________________________|" << endl;
 }
 
 
 void highScoreGameOverInterface(){
-    cout << "High Score Game Over " << endl;
+    system("cls");
+    cout<<"   ______________________________________________________________________________________________________________  "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |                                              CONGRATULATION                                                  | "<<endl;
+    cout<<"  |                                          =======================                                             | "<<endl;
+    cout<<"  |                                                                                                              |"<<endl;
+    cout<<"  |         H     H  I I I    G G G G   H     H        S S S     C C C   O O O   R R R   E E E E                 | "<<endl;
+    cout<<"  |         H     H    I     G          H     H       S        C        O     O  R    R  E                       | "<<endl;
+    cout<<"  |         H H H H    I    G    G G G  H H H H        S S S   C        O     O  R R R   E E E                   | "<<endl;
+    cout<<"  |         H     H    I     G     G G  H     H             S  C        O     O  R  R    E                       | "<<endl;
+    cout<<"  |         H     H  I I I    G G G  G  H     H        S S S     C C C   O O O   R    R  E E E E                 | "<<endl;
+    cout<<"  |        =================================================================================================     | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                     YOUR FINAL SCORE IS >>>>>>>>>> " << setw(3) << gameScore << "                                       | "<<endl;
+    cout<<"  |         (     )    (      )                                                       (     )    (      )        | "<<endl;
+    cout<<"  |          )   (      )    (                                                         )   (      )    (         | "<<endl;
+    cout<<"  |         (     )    (      )                                                       (     )    (      )        | "<<endl;
+    cout<<"  |          )   (      )    (                                                         )   (      )    (         | "<<endl;
+    cout<<"  |         (     )    (      )                                                       (     )    (      )        | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |______________________________________________________________________________________________________________| "<<endl;
 }
 
 void creditsInterface(){
@@ -806,7 +837,58 @@ void creditsInterface(){
 }
 
 void timeOutGameOverInterface(){
-    cout << "Time Out Game OVer interface" << endl;
+    system("cls");
+    cout<<"   ______________________________________________________________________________________________________________  "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |      ====================================================================================================    | "<<endl;
+    cout<<"  |              T T T T T  I I I I I  M         M  E E E E E         O O O     U         U  T T T T T           | "<<endl;
+    cout<<"  |                  T          I      M M     M M  E               O       O   U         U      T               | "<<endl;
+    cout<<"  |                  T          I      M  M   M  M  E              O         O  U         U      T               | "<<endl;
+    cout<<"  |                  T          I      M   M M   M  E E E E        O         O  U         U      T               | "<<endl;
+    cout<<"  |                  T          I      M    M    M  E              O         O  U         U      T               | "<<endl;
+    cout<<"  |                  T          I      M         M  E               O       O    U       U       T               | "<<endl;
+    cout<<"  |                  T      I I I I I  M         M  E E E E E         O O O        U U U         T               | "<<endl;
+    cout<<"  |        =================================================================================================     | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |______________________________________________________________________________________________________________| "<<endl;
+}
+
+
+void goodByeExitInterface(){
+    system("cls");
+    cout<<"   ______________________________________________________________________________________________________________  "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |        =================================================================================================     | "<<endl;
+    cout<<"  |                G G G G      O O O        O O O     D D D D          B B B    Y       Y  E E E E E            | "<<endl;
+    cout<<"  |              G        G   O       O    O       O       D   D        B     B   Y     Y   E                    | "<<endl;
+    cout<<"  |             G            O         O  O         O      D    D       B     B    Y   Y    E                    | "<<endl;
+    cout<<"  |             G     G G G  O         O  O         O      D    D       B B B       Y Y     E E E                | "<<endl;
+    cout<<"  |             G      G  G  O         O  O         O      D    D       B     B      Y      E                    | "<<endl;
+    cout<<"  |              G     G  G   O       O    O       O       D   D        B     B      Y      E                    | "<<endl;
+    cout<<"  |               G G G   G     O O O        O O O     D D D D          B B B        Y      E E E E E            | "<<endl;
+    cout<<"  |        =================================================================================================     | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |______________________________________________________________________________________________________________| "<<endl;
 }
 
 
