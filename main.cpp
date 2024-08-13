@@ -112,7 +112,7 @@ const int pinkColor = 13;
 //                                            G L O B A L   V A R I A B L E S 
 // MENU RELATED
 int loadTimeAppear = 2;         //Loading sign appears after this amount of seconds 
-int splashScreenRefresh = 2;    //Duration of the Splash Screen Sleep time
+int splashScreenRefresh = 3;    //Duration of the Splash Screen Sleep time
 int mainMenuUserInput = 0;      //Store the users Input from thew Main Menu
 string valueStore;              //Used in File Read to get User Scores
 
@@ -707,30 +707,34 @@ void splashScreenDraw(){
 
 void gameMenuScreenDraw(){
     system("cls");
-	cout<< "  _____________________________________________________________________________________________________________     " << endl;  
-	cout<< " |       _____________________________________________________            ...      \\  |  /      ...            |   " << endl;
-	cout<< " |      |                                                     |         .@ @ @.     \\ | /     .@ @ @.          |   " << endl;
-	cout<< " |      |     G G G           A       M         M  E E E E    |        '@ @ @ @.  ___\\|/___  '@ @ @ @.         |   " << endl;
-	cout<< " |      |   G       G        A A      M M     M M  E          |        '@ @ @ @.     /|\\     '@ @ @ @'         |   " << endl;
-	cout<< " |      |  G                A   A     M  M   M  M  E          |         '@ @ @'     / | \\      @ @ @           |   " << endl;
-	cout<< " |      |  G     G G G     A A A A    M   M M   M  E E E      |           '''      /  |  \\      '''            |   " << endl;
-	cout<< " |      |  G       G G    A       A   M    M    M  E         /______________________________________________   |    " << endl;
-	cout<< " |      |   G     G  G   A         A  M         M  E        /                                               |  |    " << endl;
-	cout<< " |      |     G G    G  A           A M         M  E E E E /  M        M  E E E E E  N       N  U        U  |  |    " << endl;
-	cout<< " |      |_________________________________________________/   M M    M M  E          N N     N  U        U  |  |    " << endl;
-	cout<< " |                                                  |         M  M  M  M  E          N  N    N  U        U  |  |    " << endl;
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(h, 240);
+	cout<< "  _____________________________________________________________________________________________________________  " << endl;  
+	cout<< " |       _____________________________________________________            ...      \\  |  /      ...            | " << endl;
+	cout<< " |      |                                                     |         .@ @ @.     \\ | /     .@ @ @.          | " << endl;
+	cout<< " |      |     G G G           A       M         M  E E E E    |        '@ @ @ @.  ___\\|/___  '@ @ @ @.         | " << endl;
+	cout<< " |      |   G       G        A A      M M     M M  E          |        '@ @ @ @.     /|\\     '@ @ @ @'         | " << endl;
+	cout<< " |      |  G                A   A     M  M   M  M  E          |         '@ @ @'     / | \\      @ @ @           | " << endl;
+	cout<< " |      |  G     G G G     A A A A    M   M M   M  E E E      |           '''      /  |  \\      '''            | " << endl;
+	cout<< " |      |  G       G G    A       A   M    M    M  E         /______________________________________________   | " << endl;
+	cout<< " |      |   G     G  G   A         A  M         M  E        /                                               |  | " << endl;
+	cout<< " |      |     G G    G  A           A M         M  E E E E /  M        M  E E E E E  N       N  U        U  |  | " << endl;
+	cout<< " |      |_________________________________________________/   M M    M M  E          N N     N  U        U  |  | " << endl;
+	cout<< " |                                                  |         M  M  M  M  E          N  N    N  U        U  |  | " << endl;
 	cout<< " |           /\\        /\\        /\\                 |         M   M    M  E E E      N   N   N  U        U  |  | " << endl;
 	cout<< " |          /  \\      /  \\      /  \\                |         M        M  E          N    N  N  U        U  |  | " << endl;
 	cout<< " |         /|  |\\    /|  |\\    /|  |\\               |         M        M  E          N     N N   U      U   |  | " << endl;
-	cout<< " |          |  |      |  |      |  |                |         M        M  E E E E E  N       N    U U U     |  |    " << endl;
-	cout<< " |          |  |      |  |      |  |                |_______________________________________________________|  |    " << endl;
-	cout<< " |          |__|      |__|      |__|                                                                           |    " << endl;
-    cout<< " |           )(        )(        )(           1.  New Game                                                     |    " << endl;
-    cout<< " |          (  )      (  )      (  )          2.  Score Details                                                |    " << endl;
-    cout<< " |           )(        )(        )(           3.  How to play                                                  |    " << endl;
-    cout<< " |          (  )      (  )      (  )          4.  Credits                                                      |    " << endl;
-    cout<< " |           )(        )(        )(           5.  Exit                                                         |    " << endl;
-    cout<< " |_____________________________________________________________________________________________________________|    " << endl;
+	cout<< " |          |  |      |  |      |  |                |         M        M  E E E E E  N       N    U U U     |  | " << endl;
+	cout<< " |          |  |      |  |      |  |                |_______________________________________________________|  | " << endl;
+	cout<< " |          |__|      |__|      |__|                                                                           | " << endl;
+    cout<< " |           )(        )(        )(           1.  New Game                                                     | " << endl;
+    cout<< " |          (  )      (  )      (  )          2.  Score Details                                                | " << endl;
+    cout<< " |           )(        )(        )(           3.  How to play                                                  | " << endl;
+    cout<< " |          (  )      (  )      (  )          4.  Credits                                                      | " << endl;
+    cout<< " |           )(        )(        )(           5.  Exit                                                         | " << endl;
+    cout<< " |_____________________________________________________________________________________________________________| " << endl;
+    cout<< "                                                                                                                 " << endl;
+    SetConsoleTextAttribute(h, whiteColor);
     cout<<"              Enter your choice  >>>>  ";
 }
 
@@ -766,6 +770,7 @@ void gameOverInterface(){
 void instructionInterface(){
     system("cls");
     HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(h, 240);
 	cout << "____________________________________________________________________________________________________"<< endl;
 	cout << "|                                                                                                  |" << endl;
 	cout << "|    H    H  OOOOOO   W     W      TTTTTTTT   OOOOOO         PPPPPP   L       AAAAAA    Y     Y    |" << endl;
@@ -792,7 +797,7 @@ void instructionInterface(){
 	cout << "|                                                                                                  |" << endl;
 	cout << "|                                                                                                  |" << endl;	
 	cout << "____________________________________________________________________________________________________" << endl;
-
+    SetConsoleTextAttribute(h,whiteColor);
 }
 
 void scoreDisplayInterface(){
@@ -873,30 +878,31 @@ void creditsInterface(){
     HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(h, 112);
 	cout << "____________________________________________________________________________________________________" << endl;
-	cout << "|            ============================================================================          |" << endl;
-	cout << "|               c c c  R R R R   E E E E E  D D D D    I I I I I  T T T T T    S S S               |" << endl;
-	cout << "|             c        R      R  E            D     D      I          T      S       S             |" << endl;
-	cout << "|            c         R      R  E            D      D     I          T      S                     |" << endl;
-	cout << "|            c         R R R R   E E E E      D      D     I          T        S S S               |" << endl;
-	cout << "|            c         R  R      E            D      D     I          T              S             |" << endl;
-	cout << "|             c        R    R    E            D     D      I          T              S             |" << endl;
-	cout << "|               c c c  R      R  E E E E E  D D D D    I I I I I      T        S S S               |" << endl;
-	cout << "|           ============================================================================           |" << endl;
-	cout << "|                                                                                                  |" << endl;
-	cout << "| >>>>>> BOUNCY BALL Version 1.0                                                                   |" << endl;
-	cout << "|                                                                                                  |" << endl;	   
-	cout << "| >>>>>> Game Project Development Team:                                                            |" << endl;
-	cout << "|                          Akila Benaragama - File handling and Player Data Management             |" << endl;
-	cout << "|                                                                                                  |" << endl;
-	cout << "|                          Akila Pilapitiya - Ingame Logic Development and Code Organization       |" << endl;
-	cout << "|                                                                                                  |" << endl;       
-	cout << "|                          Chanuka Herath   - Inputs Handling and Gameplay Updates                 |" << endl;
-	cout << "|                                                                                                  |" << endl;
-	cout << "|                          Shuhail Shafeek  - Graphical Interface Development and Management       |" << endl;
-	cout << "|                                                                                                  |" << endl;
-	cout << "| >>>>>>  Project Duration  - 2 Weeks                                                              |" << endl;
-	cout << "|                                      ***********                                                 |" << endl;
-	cout << "|__________________________________________________________________________________________________|" << endl;
+	cout << " |            ============================================================================          | " << endl;
+	cout << " |               C C C  R R R R   E E E E E  D D D D    I I I I I  T T T T T    S S S               | " << endl;
+	cout << " |             C        R      R  E            D     D      I          T      S       S             | " << endl;
+	cout << " |            C         R      R  E            D      D     I          T      S                     | " << endl;
+	cout << " |            C         R R R R   E E E E      D      D     I          T        S S S               | " << endl;
+	cout << " |            C         R  R      E            D      D     I          T              S             | " << endl;
+	cout << " |             C        R    R    E            D     D      I          T              S             | " << endl;
+	cout << " |               C C C  R      R  E E E E E  D D D D    I I I I I      T        S S S               | " << endl;
+	cout << " |           ============================================================================           | " << endl;
+	cout << " |                                                                                                  | " << endl;
+	cout << " | >>>>>> BOUNCY BALL Version 1.0                                                                   | " << endl;
+	cout << " |                                                                                                  | " << endl;	   
+	cout << " | >>>>>> Game Project Development Team:                                                            | " << endl;
+	cout << " |                          Akila Benaragama - File handling and Player Data Management             | " << endl;
+	cout << " |                                                                                                  | " << endl;
+	cout << " |                          Akila Pilapitiya - Ingame Logic Development and Code Organization       | " << endl;
+	cout << " |                                                                                                  | " << endl;       
+	cout << " |                          Chanuka Herath   - Inputs Handling and Gameplay Updates                 | " << endl;
+	cout << " |                                                                                                  | " << endl;
+	cout << " |                          Shuhail Shafeek  - Graphical Interface Development and Management       | " << endl;
+	cout << " |                                                                                                  | " << endl;
+	cout << " | >>>>>>  Project Duration  - 2 Weeks                                                              | " << endl;
+	cout << " |                                      ***********                                                 | " << endl;
+	cout << " |__________________________________________________________________________________________________| " << endl;
+    cout << "                                                                                                      " << endl;
     SetConsoleTextAttribute(h, whiteColor);
 }
 
