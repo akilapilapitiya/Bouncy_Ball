@@ -2,6 +2,7 @@ chanuka,1
 ADADA,0
 Chanuka,3
 Akila,3
+<<<<<<< Updated upstream
 Ghost,5
 Hello,10
 Akila,240
@@ -17,3 +18,6 @@ dog,121
 Kitty,35
 Sea,41
 asd,16
+=======
+akila,30
+>>>>>>> Stashed changes
