@@ -160,6 +160,7 @@ int scoreStoreDummyVariable;        //Used to store the name while sorting the s
 
 //Design Variables
 int scoreColorDesigner;             //Color change in score display
+int gameTimeColorChanger;
 
 
 //----------------------------------------------------------------------------------------------------------------------------------------------
@@ -421,7 +422,7 @@ void timeHandler(){
 
 //FUNCTION to draw the game in all 3 Instances
 int gameDraw(){
-
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);  //For console text color changing
     //When the obstacle is in right of the ball
     if (dynamicDistanceAdjust > 0){
         for(int i = 0; i < gameBodyHeightConstant; i++){
@@ -485,8 +486,17 @@ int gameDraw(){
     for (int i = 0; i < frameWidthConstant; i++)cout << "-";
     cout << endl;
 
+    if(remainingTime <=10){
+        gameTimeColorChanger = 79;
+    }else{
+        gameTimeColorChanger = whiteColor;
+    }
     //Game Score Display
-    cout << "SCORE: "  << setw(4)<< gameScore << setw(30) << "" << "Remaining Time: " << setw(3) << remainingTime  << " seconds";
+    cout << "SCORE: "  << setw(4)<< gameScore << setw(30) << "" << "Remaining Time: ";
+    SetConsoleTextAttribute(h, gameTimeColorChanger); 
+    cout << setw(3) << remainingTime;
+    SetConsoleTextAttribute(h, whiteColor);
+    cout  << " seconds";
     return(0);
 }
 
@@ -887,7 +897,7 @@ void timeOutGameOverInterface(){
 
 void goodByeExitInterface(){
     system("cls");
-    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);  //For console text color changing
     cout<<"   ______________________________________________________________________________________________________________  "<<endl;
 	cout<<"  |                                                                                                              | "<<endl;
 	cout<<"  |                                                                                                              | "<<endl;

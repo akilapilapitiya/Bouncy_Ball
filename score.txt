@@ -19,3 +19,6 @@ Sea,41
 asd,16
 AAA,2
 adada,11
+AAA,30
+aaa,19
+aaaaaaaa,22
