@@ -22,3 +22,5 @@ adada,11
 AAA,30
 aaa,19
 aaaaaaaa,22
+asd,12
+wer,10
