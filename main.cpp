@@ -82,13 +82,13 @@ struct playerStats playerStatArray[numberOfPlayersExpectedConstant + 1];    //As
 
 
 // Global Constants to controll gameplay Speeds(Relative to game Scores)
-const int obstacleMoveRateConstant = 4;                         //Rate at which the obstacle Moves to left RESET value
+const int obstacleMoveRateConstant = 4;  //Rate at which the obstacle Moves to left RESET value
 
-int gameSpeedControllArray[] = {20,     //gameSpeedControllArray[0]  First Speed Increment
-                                40,     //gameSpeedControllArray[1]  Second Speed Increment
+int gameSpeedControllArray[] = {20,      //gameSpeedControllArray[0]  First Speed Increment
+                                40,      //gameSpeedControllArray[1]  Second Speed Increment
                                 60};     //gameSpeedControllArray[2]  Third Speed Increment
 
-const int gameSpeedControlPointerConstant = 0; //Reset check loop value to zero
+const int gameSpeedControlPointerConstant = 0;  //Reset check loop value to zero
 const int speedDeltaConstant = 4;               //Rate of change in obstacle movement speed
 
 //Game Exit Screen Refresh timer
@@ -168,26 +168,26 @@ int scoreColorDesigner;             //Color change in score display
 
 
 // MENU RELATED
-void gameFrame();           //Draw the Game Frame
-int mainMenu();             //Main Menu Configurations
-void returnToMainMenu();    //Function to Return to the Main Menu from Menu Elements
-void splashScreen();        //Splash Screen Design for the Game
-void creditsPage();         //Credits Page from main Menu
-int scoreDisplay();         //Display Scores
-void gameInstructions();    //Instruction Page for the game
+void gameFrame();                      //Draw the Game Frame
+int mainMenu();                        //Main Menu Configurations
+void returnToMainMenu();               //Function to Return to the Main Menu from Menu Elements
+void splashScreen();                   //Splash Screen Design for the Game
+void creditsPage();                    //Credits Page from main Menu
+int scoreDisplay();                    //Display Scores
+void gameInstructions();               //Instruction Page for the game
 
 //GAME LOGIC RELATED
-int gameInitialize();                   //main Menu Connect for new Game
-void gameVariableResetFunction();       //Resets all variable Data for a new Game
-void input();                           //Function to handle keyboard input
-void keyBoardLogic();                   //Function to bind ingame Actions with Keyboard logics
-void timeHandler();                     //Function to Control Game Played Time
-int gameDraw();                         //Draw the Game in all Instances
-void ballFall();                        //Make the Ball Fall Down
-void gamePhaseChanger();                //Change the game spped based on the marks gained
-void gameOverDisplay();                 //Game Over Prompt with menu Includes
-int dataWriteFunction();                //Function to write the user data to the file
-int highScoreIdentifier();              //Identify if the last upadted score is the highest score
+int gameInitialize();                  //main Menu Connect for new Game
+void gameVariableResetFunction();      //Resets all variable Data for a new Game
+void input();                          //Function to handle keyboard input
+void keyBoardLogic();                  //Function to bind ingame Actions with Keyboard logics
+void timeHandler();                    //Function to Control Game Played Time
+int gameDraw();                        //Draw the Game in all Instances
+void ballFall();                       //Make the Ball Fall Down
+void gamePhaseChanger();               //Change the game spped based on the marks gained
+void gameOverDisplay();                //Game Over Prompt with menu Includes
+int dataWriteFunction();               //Function to write the user data to the file
+int highScoreIdentifier();             //Identify if the last upadted score is the highest score
 
 //GAME STARTUP FUNCTIONS
 int gameStartUp();                     //All Tasks Handled At Game Start
@@ -216,8 +216,8 @@ void gamePlayTestingDetails();         //inside  gameInitialize();
 
 //                                M E N U   R E L A T E D   F U N C T I O N S 
 
-// FUNCTION to draw the game Frame                  (Inputs defined: GLOBAL frameWidthConstant, GLOBAL frameHeightConstant)                                                    
-void gameFrame(){//AKILA
+// FUNCTION to draw the game Frame                                                                 
+void gameFrame(){
     for(int i = 0; i < frameWidthConstant; i++) cout <<"-";
     cout << endl;
     for(int j = 0;j < frameHeightConstant; j++){
@@ -228,76 +228,74 @@ void gameFrame(){//AKILA
     for(int k = 0; k < frameWidthConstant; k++) cout <<"-";
 }
 
-// FUNCTION to display and configure the main menu  (Inputs taken from user to GLOBAL mainMenuUserInput)
-int mainMenu(){//AKILA
+// FUNCTION to display and configure the main menu 
+int mainMenu(){
     
     gameMenuScreenDraw();
     cin >> mainMenuUserInput;
 
     if(mainMenuUserInput == 1){
-        gameInitialize();
+        gameInitialize();                                                     //Call gameInitialize() function
     }else if (mainMenuUserInput == 2){
-        scoreDisplay();
+        scoreDisplay();                                                       //Call scoreDisplay() function
     }else if (mainMenuUserInput == 3){
-        gameInstructions();
+        gameInstructions();                                                    //Call gameInstructions() function
     }else if (mainMenuUserInput == 4){
-        creditsPage();
+        creditsPage();                                                         //Call creditsPage() function
     }else if (mainMenuUserInput == 5){
-        goodByeExitInterface();
-        this_thread::sleep_for(chrono::seconds(exitScreenRefreshConstant));    //sleep console for specified time
-        system("cls");
+        goodByeExitInterface();                                                //Call goodByeExitInterface() function
+        this_thread::sleep_for(chrono::seconds(exitScreenRefreshConstant));    //Sleep console for specified time
+        system("cls");                                                         //Clear the Console
         return(0);
-    }else{
-        system("cls");
-        mainMenu();
+    }else{                                                                     //Invaild Inputs handling
+        system("cls");                                                         //Clear the Console
+        mainMenu();                                                            //Recall mainmenu() function
 
     }
     return(0);
 }
 
-//FUNCTION to handle the returns from the main menu     (Inputs taken from user to GLOBAL mainMenuUserInput)
-void returnToMainMenu(){//AKILA
+//FUNCTION to handle the returns from the main menu     
+void returnToMainMenu(){
     cout << "\n";
     cout << "Enter 0 to return to main Menu" ;
     cin  >> mainMenuUserInput;
-    while(mainMenuUserInput != 0){                  //If user inputs an invalid input
+    while(mainMenuUserInput != 0){                               //Condition loop if the user inputs is an invalid input
         cout << "Enter a valid Input" ;
         cin  >> mainMenuUserInput;
     }
-    if(mainMenuUserInput == 0){                     //Return logic to the main menu
-        mainMenu();                                 //link to mainMenu Function
+    if(mainMenuUserInput == 0){                                  //Return logic to the main menu
+        mainMenu();                                              //link to mainMenu Function
     }
 }
 
 // FUNCTION to display the splash screen
-void splashScreen(){//AKILA
+void splashScreen(){
     splashScreenDraw();
-    this_thread::sleep_for(chrono::seconds(splashScreenRefresh));    //sleep console for specified time
-    mainMenu();                                                      //link to mainMenu Function
+    this_thread::sleep_for(chrono::seconds(splashScreenRefresh));  //sleep console for specified time
+    mainMenu();                                                    //link to mainMenu Function
 
 }
 
 //FUNCTION to handle the credits window
-void creditsPage(){//AKILA
+void creditsPage(){
     system("cls");                              //Clear the terminal
-    cout << "Ball Bounce" << endl;
-    cout << "";
+    creditsInterface();                         //Call interface for credits page
     returnToMainMenu();                         //Connection to main menu function
 }
 
 //FUNCTION to handle the score card window
-int scoreDisplay(){//AKILA                           
-    scoreDisplayInterface();
-
-    returnToMainMenu();
+int scoreDisplay(){
+    system("cls");                          
+    scoreDisplayInterface();                   //Call interface
+    returnToMainMenu();                        //Connect the main menu function
     return(0);
 }
 
 // FUNCTION to handle the game instructions window
-void gameInstructions(){//benaragama
+void gameInstructions(){
     system("cls");                              //Clear the terminal
     instructionInterface();                     //Instructions Interface Design
-
     returnToMainMenu();                         //Connection to main menu function
 }
 
@@ -308,22 +306,13 @@ void gameInstructions(){//benaragama
 
 
 //Function to Initialize the Game
-int gameInitialize(){//AKILA
-
-    //Call the reset Function
-    gameVariableResetFunction();
-    
-    //Draw an interface to Get users Name
-    // Input User name to store marks
-    //On completion, call the game logic system
-    system("cls");
+int gameInitialize(){
+    gameVariableResetFunction();                                            //Call the reset Function
+    system("cls");                                                          //Refresh the Console
     cout << "Enter Player Name: ";
     cin >> playerName;
-    system("cls");
-
-
-
-    //Game loop
+    system("cls");                                                          //Refresh the Console                                                                                                                  
+    //Game Excecute loop
     while(!gameOverStatus){
         gameDraw();                                                         //Call the GameDraw Function
         this_thread::sleep_for(chrono::milliseconds(sleepTimeConstant));    //Set the refresh time for console (sleep time)
@@ -337,17 +326,19 @@ int gameInitialize(){//AKILA
         keyBoardLogic();                                                    //Call the keyboard logic function
         ballFall();                                                         //Call the Function to make the Ball Fall
         gamePhaseChanger();                                                 //Changes the Phase of Gameplay based on score
+        
         //Conditions to loop the game and Mark the scores
         if(ballPositionFromTop == ballPositionFromTopConstant){
-            gameScore += gameScoreBonusConstant;
+            gameScore += gameScoreBonusConstant;                            //Add bonus points when the ball is on the ground
         }
+
+        //Loop the spawning of obstacles
         if((dynamicDistanceAdjust <= 0) && (dynamicDistanceAdjustNegetive <= 2)){
             dynamicDistanceAdjust = dynamicDistanceAdjustConstant;                 //Reset dynamicDistanceAdjust to default
             dynamicDistanceAdjustNegetive = dynamicDistanceAdjustNegetiveConstant; //Reset dynamicDistanceAdjustNegetive to default
             gameScore += gameScoreIncrementConstant;                               //Increment the Game Score by desires
         }
         system("cls");                                          //Refresh the Console
-
         //Testing FUNCTIONS
         //gamePlayTestingDetails();
     }
@@ -358,33 +349,33 @@ int gameInitialize(){//AKILA
 //FUNCTION to reset variables to a new game
 void gameVariableResetFunction(){
     //New Game Resets
-    gameOverStatus = gameOverStatusConstant;                    // Preset the Game Over Status
+    gameOverStatus = gameOverStatusConstant;                                 // Preset the Game Over Status
 
-    dynamicDistanceAdjust = dynamicDistanceAdjustConstant;      //Reset the Dynamic Distance Adjust for new Game
-    ballPositionFromTop = ballPositionFromTopConstant;          //Reset the Position of the ball From the top
+    //Game draw Variables Reset
+    dynamicDistanceAdjust = dynamicDistanceAdjustConstant;                   //Reset the Dynamic Distance Adjust for new Game
+    ballPositionFromTop = ballPositionFromTopConstant;                       //Reset the Position of the ball From the top
     dynamicDistanceAdjustNegetive = dynamicDistanceAdjustNegetiveConstant;   //Reset the Dynamic Distance Adjust Negetive for new Game
-    gameSpeedControlPointer = gameSpeedControlPointerConstant;      //Reset the Game Speed Pointer
-    obstacleMoveRate = obstacleMoveRateConstant;     //Reset the Speed in Wich the Obstacles Move
-    highScoreStatus = highScoreStatusConstant;       //Reset the High Score Status to false
+    gameSpeedControlPointer = gameSpeedControlPointerConstant;               //Reset the Game Speed Pointer
+    obstacleMoveRate = obstacleMoveRateConstant;                             //Reset the Speed in Wich the Obstacles Move
+    highScoreStatus = highScoreStatusConstant;                               //Reset the High Score Status to false
 
     //Player Info Resets
-    playerName = playerNameReset;                   //Reset thePlayer Name to NULL
-    gameScore = gameScoreReset;                     //Reset the game score to 0
+    playerName = playerNameReset;                                            //Reset thePlayer Name to NULL
+    gameScore = gameScoreReset;                                              //Reset the game score to 0
 
     //Time Corrections
-    timeOutStatus = timeOutStatusConstant;          //Reset Time Out Status Constant
-    gameTime = gameTimeReset;                       //Reset game time
-    remainingTime = gameplayTimeUpdater;            //Reset remaining time
+    timeOutStatus = timeOutStatusConstant;                                   //Reset Time Out Status Constant
+    gameTime = gameTimeReset;                                                //Reset game time
+    remainingTime = gameplayTimeUpdater;                                     //Reset remaining time
 
 }
 
 // FUNCTION to handle keyboard input
-void input(){//BENARAGAMA
+void input(){
     if (_kbhit())                               // Check if a key has been pressed
     {
         char key = _getch();                    // Get the pressed key
-        switch (key)                            // Determine the action based on the key
-        {
+        switch (key){                           // Determine the action based on the key
             case 'w':
                 dir = UP;                       // Move up
                 break;
@@ -395,45 +386,42 @@ void input(){//BENARAGAMA
                 break;                          // Do nothing for other keys
         }
         // Clear the input buffer to avoid multiple triggers from the same key press
-        while (_kbhit())
-        {
+        while (_kbhit()){
             key = _getch();
         }
     }
-    else
-    {
+    else{
         dir = STOP;                             // Stop movement if no key is pressed
     }
 }
 
 //FUNCTION to control logic with keyboard Inputs
-void keyBoardLogic(){//CHANUKA
+void keyBoardLogic(){
     if(ballPositionFromTop > maximumHeightTheBallCanMoveConstant){
         switch (dir) {
-            case UP:                           // Move up
-                ballPositionFromTop -= ballMoveUpToKeyPressConstant;
+            case UP:                                                    // Move up
+                ballPositionFromTop -= ballMoveUpToKeyPressConstant;    //Reduce the variable value to make the ball move up
                 break;
         }
     }
-
 }
 
 //Function to Handle inGameTime
 void timeHandler(){
-    if(gameTime >= gameplayTimeConstant){
+    if(gameTime >= gameplayTimeConstant){                         //Condition changes if the game time is over
         timeOutStatus = true;
         gameOverStatus = true;
     }
-    else{
+    else{                                                         //Condition changes if there is more time left
         gameTime += sleepTimeConstant;
     }
-    remainingTime = ((gameplayTimeConstant - gameTime) / 1000);
-
+    remainingTime = ((gameplayTimeConstant - gameTime) / 1000);   //Calculate the remaining time to display
 }
 
 
 //FUNCTION to draw the game in all 3 Instances
-int gameDraw(){//AKILA
+int gameDraw(){
+
     //When the obstacle is in right of the ball
     if (dynamicDistanceAdjust > 0){
         for(int i = 0; i < gameBodyHeightConstant; i++){
@@ -454,12 +442,11 @@ int gameDraw(){//AKILA
     }
     //When the distance between Obstacle and Ball is 0 || When the obstable is under the ball
     if(dynamicDistanceAdjust <= 0){
-        //Collsion Exit
-        if((ballPositionFromTop > 12) && (dynamicDistanceAdjustNegetive == 30)){
+        if((ballPositionFromTop > 12) && (dynamicDistanceAdjustNegetive == 30)){    //Collsion Exit
             gameOverStatus = true;                  //Since there is a collision change game over bool value to true
             return(0);                              //Break the function
         }
-        ///To be changed
+        
         if((ballPositionFromTop > 12) && (dynamicDistanceAdjustNegetive != 30)){
             for (int i = 0; i < gameBodyHeightConstant; i++){
                 if(i <= ballIdlePositionFromTop){
@@ -493,47 +480,48 @@ int gameDraw(){//AKILA
             }       
         }    
     }
+
     //Draw the Game Floor
     for (int i = 0; i < frameWidthConstant; i++)cout << "-";
     cout << endl;
 
     //Game Score Display
-    cout << "SCORE: "  << setw(4)<< gameScore << setw(30) << "" << "Remaining Time: " << setw(6) << remainingTime ;
-
+    cout << "SCORE: "  << setw(4)<< gameScore << setw(30) << "" << "Remaining Time: " << setw(3) << remainingTime  << " seconds";
     return(0);
 }
 
 //FUNCTION to make the ball Fall Down
-void ballFall(){//AKILA
+void ballFall(){
     if(ballPositionFromTop >= 16){
     }else{
-        ballPositionFromTop += ballFallRateConstant;
+        ballPositionFromTop += ballFallRateConstant;        //Make the ball come down
     }
 }
 
 //FUNCTION to change the game Speed
 void gamePhaseChanger(){
     if( gameSpeedControllArray[gameSpeedControlPointer] == gameScore){
-        obstacleMoveRate += speedDeltaConstant;
-        gameSpeedControlPointer++;
+        obstacleMoveRate += speedDeltaConstant;            //Increase the speed of the game obstacles
+        gameSpeedControlPointer++;                         //Cange the spped array calling element id
     }
 }
 
 //FUNCTION to act in Game Over Instance
-void gameOverDisplay(){//AKILA
+void gameOverDisplay(){
     system("cls");
-    dataWriteFunction();            //Call Function to Write the data to the file
+    dataWriteFunction();                                                               //Call Function to Write the data to the file
     if(highScoreStatus == true){
-        highScoreGameOverInterface();         //Call High Score Game Over Interface
+        highScoreGameOverInterface();                                                  //Call High Score Game Over Interface
     }else if(timeOutStatus == true){
              timeOutGameOverInterface();     //Call time Out Game Over Interface
              this_thread::sleep_for(chrono::seconds(timeoutDisplayRefreshConstant));    //sleep console for specified time
              gameOverInterface(); 
         }else{
-            gameOverInterface();       //Call Game Over Interface
+            Beep(523, 500);                                                             //Beep sound (523 hertz, time in milliseconds)
+            gameOverInterface();                                                        //Call Game Over Interface
     }
     returnToMainMenu();
-    gameVariableResetFunction();    //Call Function to Reset All Dynamic Data
+    gameVariableResetFunction();                                                        //Call Function to Reset All Dynamic Data
 }
 
 // FUNCTION to save user data and Scores 
@@ -548,9 +536,9 @@ int dataWriteFunction(){
     fileWriter << endl;
     fileWriter.close();
 
-    scoreFileReader();                          //Read the Score File in the Array
-    scoreArraySort();                           //Sort the User Details Array in Ascending Order
-    highScoreIdentifier();                      //Find Whether the Score is a High Score
+    scoreFileReader();                                    //Read the Score File in the Array
+    scoreArraySort();                                     //Sort the User Details Array in Ascending Order
+    highScoreIdentifier();                                //Find Whether the Score is a High Score
 
 
     return(0);
@@ -636,10 +624,11 @@ void scoreArraySort(){//AKILA
             }
         }
     }
+    /*
     //Performance testing
     for(int i = 0; i < (numberOfPlayersExpectedConstant); i++){
     	cout << playerStatArray[i].playerName << " and " << playerStatArray[i].playerScore << endl;
-    }
+    }*/
 }
 
 
