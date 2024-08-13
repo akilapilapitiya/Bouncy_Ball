@@ -3,6 +3,7 @@
 #include <iomanip>         //Outputs adjustments
 #include <thread>          //For Code Sleep
 #include <chrono>          //To make the code sleep
+#include <windows.h>       //For String Colours    used in design Functions
 #include <cstdlib>         // For system()
 #include <fstream>         //File Handling
 #include <string>          //String Manipulations
@@ -52,6 +53,7 @@ const int ballPositionFromTopConstant = 17;             //At startup Ball Positi
 const int dynamicDistanceAdjustNegetiveConstant = 30;   //Initial Distance between left wall and the obstacle when dynamicDistanceAdjust == 0
 
 // Game Time Related Constants
+const bool timeOutStatusConstant = false;                     //Default time out Status
 const int gameTimeReset = 0;                            //RESETS the Game Time
 const int gameplayTimeUpdater = 30;                     //Gameplay time in Seconds(Try to add values divisible by sleepTimeConstant)
 const int gameplayTimeConstant = (gameplayTimeUpdater * 1000);  //Convert gameplay time seconds to milliseconds
@@ -67,8 +69,9 @@ const int gameScoreIncrementConstant = 5;               //Increment of score for
 const int gameScoreBonusConstant = 1;                   //Bonus for keeping the ball on the ground
 const int gameScoreReset = 0;                           //Reset Value for the Game Score
 const string playerNameReset = "";                      //Reset Value for Player name
-const int numberOfPlayersExpectedConstant = 10;         //Size of the playerStatArray
+const int numberOfPlayersExpectedConstant = 30;         //Size of the playerStatArray
 const bool highScoreStatusConstant = false;             //Reset the high score status to false
+const int timeoutDisplayRefreshConstant = 2;            //Number Of seconds the timeout display must be shown
 
 //Global Structure named playerStats
 struct playerStats{
@@ -79,20 +82,37 @@ struct playerStats playerStatArray[numberOfPlayersExpectedConstant + 1];    //As
 
 
 // Global Constants to controll gameplay Speeds(Relative to game Scores)
-const int obstacleMoveRateConstant = 4;                         //Rate at which the obstacle Moves to left RESET value
+const int obstacleMoveRateConstant = 4;  //Rate at which the obstacle Moves to left RESET value
 
-int gameSpeedControllArray[] = {20,     //gameSpeedControllArray[0]  First Speed Increment
-                                40,     //gameSpeedControllArray[1]  Second Speed Increment
+int gameSpeedControllArray[] = {20,      //gameSpeedControllArray[0]  First Speed Increment
+                                40,      //gameSpeedControllArray[1]  Second Speed Increment
                                 60};     //gameSpeedControllArray[2]  Third Speed Increment
 
-const int gameSpeedControlPointerConstant = 0; //Reset check loop value to zero
+const int gameSpeedControlPointerConstant = 0;  //Reset check loop value to zero
 const int speedDeltaConstant = 4;               //Rate of change in obstacle movement speed
+
+//Game Exit Screen Refresh timer
+const int exitScreenRefreshConstant = 3;        //Refresh time of the exit screen in seconds
+
+
+
+//Colors for Design
+const int whiteColor = 7;
+const int yellowColor = 6;
+const int redColor = 780;
+const int greenColor = 2;
+const int greyColor = 8;
+const int blueColor = 3;
+const int pinkColor = 13;
+
+
 
 //------------------------------------------------------------------------------------------------------------------
 
 //                                            G L O B A L   V A R I A B L E S 
 // MENU RELATED
-int splashScreenRefresh = 4;    //Duration of the Splash Screen Sleep time
+int loadTimeAppear = 2;         //Loading sign appears after this amount of seconds 
+int splashScreenRefresh = 3;    //Duration of the Splash Screen Sleep time
 int mainMenuUserInput = 0;      //Store the users Input from thew Main Menu
 string valueStore;              //Used in File Read to get User Scores
 
@@ -121,6 +141,7 @@ string playerName;                  // Ingame Variable to store the players name
 bool highScoreStatus;               //Variable to handle the High Score Status
 
 //Game Time Controls and Reset Functionality
+bool timeOutStatus;                       //Variable to sotre timeout status
 int gameTime;                       //Time the Game is Played
 int remainingTime;                  //Time Left to play
 
@@ -138,6 +159,10 @@ string nameStoreDummyVariable;      //Used to store the name while sorting the s
 int scoreStoreDummyVariable;        //Used to store the name while sorting the scores in descending order
 
 
+//Design Variables
+int scoreColorDesigner;             //Color change in score display
+int gameTimeColorChanger;
+
 
 //----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -145,31 +170,30 @@ int scoreStoreDummyVariable;        //Used to store the name while sorting the s
 
 
 // MENU RELATED
-void gameFrame();           //Draw the Game Frame
-int mainMenu();             //Main Menu Configurations
-void returnToMainMenu();    //Function to Return to the Main Menu from Menu Elements
-void splashScreen();        //Splash Screen Design for the Game
-void creditsPage();         //Credits Page from main Menu
-int scoreDisplay();         //Display Scores
-void gameInstructions();    //Instruction Page for the game
-
-
+void gameFrame();                      //Draw the Game Frame
+int mainMenu();                        //Main Menu Configurations
+void returnToMainMenu();               //Function to Return to the Main Menu from Menu Elements
+void splashScreen();                   //Splash Screen Design for the Game
+void creditsPage();                    //Credits Page from main Menu
+int scoreDisplay();                    //Display Scores
+void gameInstructions();               //Instruction Page for the game
 
 //GAME LOGIC RELATED
-int gameInitialize();                   //main Menu Connect for new Game
-void gameVariableResetFunction();       //Resets all variable Data for a new Game
-void input();                           //Function to handle keyboard input
-void keyBoardLogic();                   //Function to bind ingame Actions with Keyboard logics
-void timeHandler();                     //Function to Control Game Played Time
-int gameDraw();                         //Draw the Game in all Instances
-void ballFall();                        //Make the Ball Fall Down
-void gamePhaseChanger();                //Change the game spped based on the marks gained
-void gameOverDisplay();                 //Game Over Prompt with menu Includes
-int dataWriteFunction();                //Function to write the user data to the file
-int highScoreIdentifier();              //Identify if the last upadted score is the highest score
+int gameInitialize();                  //main Menu Connect for new Game
+void gameVariableResetFunction();      //Resets all variable Data for a new Game
+void input();                          //Function to handle keyboard input
+void keyBoardLogic();                  //Function to bind ingame Actions with Keyboard logics
+void timeHandler();                    //Function to Control Game Played Time
+int gameDraw();                        //Draw the Game in all Instances
+void ballFall();                       //Make the Ball Fall Down
+void gamePhaseChanger();               //Change the game spped based on the marks gained
+void gameOverDisplay();                //Game Over Prompt with menu Includes
+int dataWriteFunction();               //Function to write the user data to the file
+int highScoreIdentifier();             //Identify if the last upadted score is the highest score
 
 //GAME STARTUP FUNCTIONS
 int gameStartUp();                     //All Tasks Handled At Game Start
+void fileCreateFunction();             //Create 'score.txt' if it does not exist
 int scoreFileReader();                 //Read the Score File and Update the array
 void scoreArraySort();                 //Sort the ScoreArray in descending order
 
@@ -179,6 +203,11 @@ void gameMenuScreenDraw();              //Game menu Design
 void gameOverInterface();               //Game Over Display Design
 void instructionInterface();            //Instructions Interface Design 
 void scoreDisplayInterface();           //Draw player Scores
+void highScoreGameOverInterface();      //Draw High Score when Game Over
+void creditsInterface();                //Draw ingame Credits display interface
+void timeOutGameOverInterface();        //Draw the game over interface when there is a timeout
+void goodByeExitInterface();            //Displayed at game Exit
+void gameLoadInterface();               //Game Load Countdown
 
 
 //TESTING FUNCTIONS
@@ -190,8 +219,8 @@ void gamePlayTestingDetails();         //inside  gameInitialize();
 
 //                                M E N U   R E L A T E D   F U N C T I O N S 
 
-// FUNCTION to draw the game Frame                  (Inputs defined: GLOBAL frameWidthConstant, GLOBAL frameHeightConstant)                                                    
-void gameFrame(){//AKILA
+// FUNCTION to draw the game Frame                                                                 
+void gameFrame(){
     for(int i = 0; i < frameWidthConstant; i++) cout <<"-";
     cout << endl;
     for(int j = 0;j < frameHeightConstant; j++){
@@ -202,73 +231,89 @@ void gameFrame(){//AKILA
     for(int k = 0; k < frameWidthConstant; k++) cout <<"-";
 }
 
-// FUNCTION to display and configure the main menu  (Inputs taken from user to GLOBAL mainMenuUserInput)
-int mainMenu(){//AKILA
+// FUNCTION to display and configure the main menu 
+int mainMenu(){
     
     gameMenuScreenDraw();
     cin >> mainMenuUserInput;
 
     if(mainMenuUserInput == 1){
-        gameInitialize();
+        gameInitialize();                                                     //Call gameInitialize() function
     }else if (mainMenuUserInput == 2){
-        scoreDisplay();
+        scoreDisplay();                                                       //Call scoreDisplay() function
     }else if (mainMenuUserInput == 3){
-        gameInstructions();
+        gameInstructions();                                                    //Call gameInstructions() function
     }else if (mainMenuUserInput == 4){
-        creditsPage();
+        creditsPage();                                                         //Call creditsPage() function
     }else if (mainMenuUserInput == 5){
+        goodByeExitInterface();                                                //Call goodByeExitInterface() function
+        this_thread::sleep_for(chrono::seconds(exitScreenRefreshConstant));    //Sleep console for specified time
+        system("cls");                                                         //Clear the Console
         return(0);
-    }else{
-        system("cls");
-        mainMenu();
+    }else{                                                                     //Invaild Inputs handling
+        system("cls");                                                         //Clear the Console
+        mainMenu();                                                            //Recall mainmenu() function
 
     }
     return(0);
 }
 
-//FUNCTION to handle the returns from the main menu     (Inputs taken from user to GLOBAL mainMenuUserInput)
-void returnToMainMenu(){//AKILA
+//FUNCTION to handle the returns from the main menu     
+void returnToMainMenu(){
     cout << "\n";
-    cout << "Enter 0 to return to main Menu" ;
+    cout << "Enter '0' to return to main Menu" ;
     cin  >> mainMenuUserInput;
-    while(mainMenuUserInput != 0){                  //If user inputs an invalid input
+    while(mainMenuUserInput != 0){                               //Condition loop if the user inputs is an invalid input
         cout << "Enter a valid Input" ;
         cin  >> mainMenuUserInput;
     }
-    if(mainMenuUserInput == 0){                     //Return logic to the main menu
-        mainMenu();                                 //link to mainMenu Function
+    if(mainMenuUserInput == 0){                                  //Return logic to the main menu
+        mainMenu();                                              //link to mainMenu Function
+    }
+} 
+
+void gameOverReturnToMainMenu(){
+    cout << "\n";
+    cout << "Enter '0' to return to main Menu or Enter '1' to start a New Game" ;
+    cin  >> mainMenuUserInput;
+    while((mainMenuUserInput != 0) && (mainMenuUserInput != 1)){                               //Condition loop if the user inputs is an invalid input
+        cout << "Enter a valid Input" ;
+        cin  >> mainMenuUserInput;
+    }
+    if(mainMenuUserInput == 0){                                  //Return logic to the main menu
+        mainMenu();                                              //link to mainMenu Function
+    }else if(mainMenuUserInput == 1){
+        gameInitialize();                                                     //Call gameInitialize() function
     }
 }
 
 // FUNCTION to display the splash screen
-void splashScreen(){//AKILA
+void splashScreen(){
     splashScreenDraw();
-    this_thread::sleep_for(chrono::seconds(splashScreenRefresh));    //sleep console for specified time
-    mainMenu();                                                      //link to mainMenu Function
+    this_thread::sleep_for(chrono::seconds(splashScreenRefresh));  //sleep console for specified time
+    mainMenu();                                                    //link to mainMenu Function
 
 }
 
 //FUNCTION to handle the credits window
-void creditsPage(){//AKILA
+void creditsPage(){
     system("cls");                              //Clear the terminal
-    cout << "Ball Bounce" << endl;
-    cout << "";
+    creditsInterface();                         //Call interface for credits page
     returnToMainMenu();                         //Connection to main menu function
 }
 
 //FUNCTION to handle the score card window
-int scoreDisplay(){//AKILA                           
-    scoreDisplayInterface();
-
-    returnToMainMenu();
+int scoreDisplay(){
+    system("cls");                          
+    scoreDisplayInterface();                   //Call interface
+    returnToMainMenu();                        //Connect the main menu function
     return(0);
 }
 
 // FUNCTION to handle the game instructions window
-void gameInstructions(){//benaragama
+void gameInstructions(){
     system("cls");                              //Clear the terminal
     instructionInterface();                     //Instructions Interface Design
-
     returnToMainMenu();                         //Connection to main menu function
 }
 
@@ -279,22 +324,13 @@ void gameInstructions(){//benaragama
 
 
 //Function to Initialize the Game
-int gameInitialize(){//AKILA
-
-    //Call the reset Function
-    gameVariableResetFunction();
-    
-    //Draw an interface to Get users Name
-    // Input User name to store marks
-    //On completion, call the game logic system
-    system("cls");
+int gameInitialize(){
+    gameVariableResetFunction();                                            //Call the reset Function
+    system("cls");                                                          //Refresh the Console
     cout << "Enter Player Name: ";
     cin >> playerName;
-    system("cls");
-
-
-
-    //Game loop
+    gameLoadInterface();                                                    //Game loading interface call                                                                                                                  
+    //Game Excecute loop
     while(!gameOverStatus){
         gameDraw();                                                         //Call the GameDraw Function
         this_thread::sleep_for(chrono::milliseconds(sleepTimeConstant));    //Set the refresh time for console (sleep time)
@@ -308,15 +344,19 @@ int gameInitialize(){//AKILA
         keyBoardLogic();                                                    //Call the keyboard logic function
         ballFall();                                                         //Call the Function to make the Ball Fall
         gamePhaseChanger();                                                 //Changes the Phase of Gameplay based on score
+        
         //Conditions to loop the game and Mark the scores
-        gameScore += gameScoreBonusConstant;
+        if(ballPositionFromTop == ballPositionFromTopConstant){
+            gameScore += gameScoreBonusConstant;                            //Add bonus points when the ball is on the ground
+        }
+
+        //Loop the spawning of obstacles
         if((dynamicDistanceAdjust <= 0) && (dynamicDistanceAdjustNegetive <= 2)){
             dynamicDistanceAdjust = dynamicDistanceAdjustConstant;                 //Reset dynamicDistanceAdjust to default
             dynamicDistanceAdjustNegetive = dynamicDistanceAdjustNegetiveConstant; //Reset dynamicDistanceAdjustNegetive to default
             gameScore += gameScoreIncrementConstant;                               //Increment the Game Score by desires
         }
         system("cls");                                          //Refresh the Console
-
         //Testing FUNCTIONS
         //gamePlayTestingDetails();
     }
@@ -327,32 +367,33 @@ int gameInitialize(){//AKILA
 //FUNCTION to reset variables to a new game
 void gameVariableResetFunction(){
     //New Game Resets
-    gameOverStatus = gameOverStatusConstant;                    // Preset the Game Over Status
+    gameOverStatus = gameOverStatusConstant;                                 // Preset the Game Over Status
 
-    dynamicDistanceAdjust = dynamicDistanceAdjustConstant;      //Reset the Dynamic Distance Adjust for new Game
-    ballPositionFromTop = ballPositionFromTopConstant;          //Reset the Position of the ball From the top
+    //Game draw Variables Reset
+    dynamicDistanceAdjust = dynamicDistanceAdjustConstant;                   //Reset the Dynamic Distance Adjust for new Game
+    ballPositionFromTop = ballPositionFromTopConstant;                       //Reset the Position of the ball From the top
     dynamicDistanceAdjustNegetive = dynamicDistanceAdjustNegetiveConstant;   //Reset the Dynamic Distance Adjust Negetive for new Game
-    gameSpeedControlPointer = gameSpeedControlPointerConstant;      //Reset the Game Speed Pointer
-    obstacleMoveRate = obstacleMoveRateConstant;     //Reset the Speed in Wich the Obstacles Move
-    highScoreStatus = highScoreStatusConstant;       //Reset the High Score Status to false
+    gameSpeedControlPointer = gameSpeedControlPointerConstant;               //Reset the Game Speed Pointer
+    obstacleMoveRate = obstacleMoveRateConstant;                             //Reset the Speed in Wich the Obstacles Move
+    highScoreStatus = highScoreStatusConstant;                               //Reset the High Score Status to false
 
     //Player Info Resets
-    playerName = playerNameReset;                   //Reset thePlayer Name to NULL
-    gameScore = gameScoreReset;                     //Reset the game score to 0
+    playerName = playerNameReset;                                            //Reset thePlayer Name to NULL
+    gameScore = gameScoreReset;                                              //Reset the game score to 0
 
     //Time Corrections
-    gameTime = gameTimeReset;
-    remainingTime = gameplayTimeUpdater;
+    timeOutStatus = timeOutStatusConstant;                                   //Reset Time Out Status Constant
+    gameTime = gameTimeReset;                                                //Reset game time
+    remainingTime = gameplayTimeUpdater;                                     //Reset remaining time
 
 }
 
 // FUNCTION to handle keyboard input
-void input(){//BENARAGAMA
+void input(){
     if (_kbhit())                               // Check if a key has been pressed
     {
         char key = _getch();                    // Get the pressed key
-        switch (key)                            // Determine the action based on the key
-        {
+        switch (key){                           // Determine the action based on the key
             case 'w':
                 dir = UP;                       // Move up
                 break;
@@ -363,44 +404,42 @@ void input(){//BENARAGAMA
                 break;                          // Do nothing for other keys
         }
         // Clear the input buffer to avoid multiple triggers from the same key press
-        while (_kbhit())
-        {
+        while (_kbhit()){
             key = _getch();
         }
     }
-    else
-    {
+    else{
         dir = STOP;                             // Stop movement if no key is pressed
     }
 }
 
 //FUNCTION to control logic with keyboard Inputs
-void keyBoardLogic(){//CHANUKA
+void keyBoardLogic(){
     if(ballPositionFromTop > maximumHeightTheBallCanMoveConstant){
         switch (dir) {
-            case UP:                           // Move up
-                ballPositionFromTop -= ballMoveUpToKeyPressConstant;
+            case UP:                                                    // Move up
+                ballPositionFromTop -= ballMoveUpToKeyPressConstant;    //Reduce the variable value to make the ball move up
                 break;
         }
     }
-
 }
 
 //Function to Handle inGameTime
 void timeHandler(){
-    if(gameTime >= gameplayTimeConstant){
+    if(gameTime >= gameplayTimeConstant){                         //Condition changes if the game time is over
+        timeOutStatus = true;
         gameOverStatus = true;
     }
-    else{
+    else{                                                         //Condition changes if there is more time left
         gameTime += sleepTimeConstant;
     }
-    remainingTime = ((gameplayTimeConstant - gameTime) / 1000);
-
+    remainingTime = ((gameplayTimeConstant - gameTime) / 1000);   //Calculate the remaining time to display
 }
 
 
 //FUNCTION to draw the game in all 3 Instances
-int gameDraw(){//AKILA
+int gameDraw(){
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);  //For console text color changing
     //When the obstacle is in right of the ball
     if (dynamicDistanceAdjust > 0){
         for(int i = 0; i < gameBodyHeightConstant; i++){
@@ -421,12 +460,11 @@ int gameDraw(){//AKILA
     }
     //When the distance between Obstacle and Ball is 0 || When the obstable is under the ball
     if(dynamicDistanceAdjust <= 0){
-        //Collsion Exit
-        if((ballPositionFromTop > 12) && (dynamicDistanceAdjustNegetive == 30)){
+        if((ballPositionFromTop > 12) && (dynamicDistanceAdjustNegetive == 30)){    //Collsion Exit
             gameOverStatus = true;                  //Since there is a collision change game over bool value to true
             return(0);                              //Break the function
         }
-        ///To be changed
+        
         if((ballPositionFromTop > 12) && (dynamicDistanceAdjustNegetive != 30)){
             for (int i = 0; i < gameBodyHeightConstant; i++){
                 if(i <= ballIdlePositionFromTop){
@@ -460,38 +498,57 @@ int gameDraw(){//AKILA
             }       
         }    
     }
+
     //Draw the Game Floor
     for (int i = 0; i < frameWidthConstant; i++)cout << "-";
     cout << endl;
 
+    if(remainingTime <=10){
+        gameTimeColorChanger = 79;
+    }else{
+        gameTimeColorChanger = whiteColor;
+    }
     //Game Score Display
-    cout << "SCORE: "  << setw(4)<< gameScore << setw(30) << "" << "Remaining Time: " << setw(6) << remainingTime ;
-
+    cout << "SCORE: "  << setw(4)<< gameScore << setw(30) << "" << "Remaining Time: ";
+    SetConsoleTextAttribute(h, gameTimeColorChanger); 
+    cout << setw(3) << remainingTime;
+    SetConsoleTextAttribute(h, whiteColor);
+    cout  << " seconds";
     return(0);
 }
 
 //FUNCTION to make the ball Fall Down
-void ballFall(){//AKILA
+void ballFall(){
     if(ballPositionFromTop >= 16){
     }else{
-        ballPositionFromTop += ballFallRateConstant;
+        ballPositionFromTop += ballFallRateConstant;        //Make the ball come down
     }
 }
 
 //FUNCTION to change the game Speed
 void gamePhaseChanger(){
     if( gameSpeedControllArray[gameSpeedControlPointer] == gameScore){
-        obstacleMoveRate += speedDeltaConstant;
-        gameSpeedControlPointer++;
+        obstacleMoveRate += speedDeltaConstant;            //Increase the speed of the game obstacles
+        gameSpeedControlPointer++;                         //Cange the spped array calling element id
     }
 }
 
 //FUNCTION to act in Game Over Instance
-void gameOverDisplay(){//AKILA
+void gameOverDisplay(){
     system("cls");
-    dataWriteFunction();            //Call Function to Write the data to the file
-    gameOverInterface();
-    gameVariableResetFunction();    //Call Function to Reset All Dynamic Data
+    dataWriteFunction();                                                               //Call Function to Write the data to the file
+    if(highScoreStatus == true){
+        highScoreGameOverInterface();                                                  //Call High Score Game Over Interface
+    }else if(timeOutStatus == true){
+             timeOutGameOverInterface();     //Call time Out Game Over Interface
+             this_thread::sleep_for(chrono::seconds(timeoutDisplayRefreshConstant));    //sleep console for specified time
+             gameOverInterface(); 
+        }else{
+            Beep(523, 500);                                                             //Beep sound (523 hertz, time in milliseconds)
+            gameOverInterface();                                                        //Call Game Over Interface
+    }
+    gameOverReturnToMainMenu();
+    gameVariableResetFunction();                                                        //Call Function to Reset All Dynamic Data
 }
 
 // FUNCTION to save user data and Scores 
@@ -506,9 +563,9 @@ int dataWriteFunction(){
     fileWriter << endl;
     fileWriter.close();
 
-    scoreFileReader();                          //Read the Score File in the Array
-    scoreArraySort();                           //Sort the User Details Array in Ascending Order
-    highScoreIdentifier();                      //Find Whether the Score is a High Score
+    scoreFileReader();                                    //Read the Score File in the Array
+    scoreArraySort();                                     //Sort the User Details Array in Ascending Order
+    highScoreIdentifier();                                //Find Whether the Score is a High Score
 
 
     return(0);
@@ -530,12 +587,21 @@ int highScoreIdentifier(){
 
 //FUNCTION for the GAME STARTUP
 int gameStartUp(){
+    fileCreateFunction();                        //Call thew file Create Function
     scoreFileReader();                          //Read the Score File in the Array
     scoreArraySort();                           //Sort the User Details Array in Ascending Order
 
-
-
     return(0);
+}
+
+//FUNCTION to Create 'score.txt' if it doesn't exist
+void fileCreateFunction(){
+    fstream fileCreator;
+    fileCreator.open("score.txt", ios::app);
+    if(!fileCreator.is_open()){
+        cout << "Error in opening the File" << endl;
+    }
+    fileCreator.close();
 }
 
 
@@ -585,10 +651,11 @@ void scoreArraySort(){//AKILA
             }
         }
     }
+    /*
     //Performance testing
     for(int i = 0; i < (numberOfPlayersExpectedConstant); i++){
     	cout << playerStatArray[i].playerName << " and " << playerStatArray[i].playerScore << endl;
-    }
+    }*/
 }
 
 
@@ -599,7 +666,9 @@ int main(){
 
     gameStartUp();
     splashScreen();
-    //gameInitialize();
+
+
+
 
    return (0); 
 }
@@ -612,68 +681,68 @@ int main(){
 
 void splashScreenDraw(){
     system("cls");
-    cout<<  "_____________________________________________________________________________________________________________ " << endl;
-    cout << "|                                                                                                           | " << endl;
-    cout << "|       BTTTTTTTTTTTTb                        BALl     EBAl                                                 | " << endl;
-    cout << "|       BALLBOUNCEBALLBb                      BALl     EBAl                                                 | " << endl;
-    cout << "|       BALl        )LBOb                     BALl     EBAl                                                 | " << endl;
-    cout << "|       BALl       )LLBOp                     BALl     EBAl                                                 | " << endl;
-    cout << "|       BALLBOUNCEBALLp      TTOTTTTDT0       BALl     EBAl                                                 | " << endl;
-    cout << "|       BALLBOUNCEBALLb      LBBALLBOUNl      BALl     EBAl                                                 | " << endl;
-    cout << "|       BALl       )LLBOb            UNl      BALl     EBAl                                                 | " << endl;
-    cout << "|       BALl        )LBOU    LBBALLBOUNl      BALl     EBAl                                                 | " << endl;
-    cout << "|       BALLBOUNCEBALLBOp    LBB     UNl      BALb     EBAb                                                 | " << endl;
-    cout << "|       BALLBOUNCEBALLB0     LBBALLBOUNC0     BALBl    EBALl                                                | " << endl;
-    cout << "|                                                                                                           | " << endl;
-    cout << "|                                                                                                           | " << endl;
-    cout << "|       BALLBOUNCEBALb                                                                                      | " << endl;
-    cout << "|       BALLBOUNCEBALLBb                                                                                    | " << endl;
-    cout << "|       BALL         LBOb                                                                                   | " << endl;
-    cout << "|       BALL        LLBOp                             LLBO0                                                 | " << endl;
-    cout << "|       BALLBOUNCEBALLp     LLBBALLBOU   BALl    LLBl   lCE0 0LBBA     NCEBALLBBA    UNCEBALLBB0            | " << endl;
-    cout << "|       BALLBOUNCEBALLb    lLLB    BOUN  BALl    LLBl   lCEBALLBBALl   UNCE   LBBA   OUN     LBBl           | " << endl;
-    cout << "|       BALL        LLBOb  lLLB    BOUN  BALl    LLBl   lCEB    BALl   UNC           OUN     LBB0           | " << endl;
-    cout << "|       BALL         LBOU  lLLB    BOUN  BALl    LLBl   lCEB    BALl   UNC           OUNCEBALLB0            | " << endl;
-    cout << "|       BALLBOUNCEBALLBOp  lLLB   LBOUN  BALL0  ALLBl   lCEB    BALl   UNCE   LBBA   OUN0                   | " << endl;
-    cout << "|       BALLBOUNCEBALLBp    0LBBALLBOU    0ALLBBALL0    lCEB    BALl    NCEBALLBBA    UNCEBALLBB            | " << endl;
-    cout << "|                                                                                                           | " << endl;
-    cout<<  "_____________________________________________________________________________________________________________ " << endl;
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(h,400);
+    cout <<"\n\n\n\n"<<endl;	
+	cout<<"\t\t\t\t ========================================"<<endl;
+    cout<<"\t\t\t\t||                @ @ @      (R)       ||"<<endl;
+    cout<<"\t\t\t\t||            @     |@@@@@@            ||"<<endl;
+    cout<<"\t\t\t\t||          @       |@@@@@@@@          ||"<<endl;
+    cout<<"\t\t\t\t||         @ BOUNCY |@@@@@@@@@         ||"<<endl;
+    cout<<"\t\t\t\t||        @         |@@@@@@@@@@        ||"<<endl;
+    cout<<"\t\t\t\t||        @---------|---------@        ||"<<endl;
+    cout<<"\t\t\t\t||        @@@@@@@@@@|         @        ||"<<endl;
+    cout<<"\t\t\t\t||         @@@@@@@@@|  BALL  @         ||"<<endl; 
+    cout<<"\t\t\t\t||          @@@@@@@@|       @          ||"<<endl;
+    cout<<"\t\t\t\t||            @@@@@@|     @            ||"<<endl;
+    cout<<"\t\t\t\t||                @ @ @                ||"<<endl;
+    cout<<"\t\t\t\t ======================================= "<<endl;
+    SetConsoleTextAttribute(h,whiteColor);
+    cout<<endl;
+    this_thread::sleep_for(chrono::seconds(loadTimeAppear));  //sleep console for specified time    
+    cout<<"\t\t\t\t\t\tLOADING......";
+    cout <<"\n\n\n\n\n\n\n"<<endl;
 }
 
 
 
 void gameMenuScreenDraw(){
     system("cls");
-	cout<< "  _____________________________________________________________________________________________________________     " << endl;  
-	cout<< " |       _____________________________________________________            ...      \\  |  /      ...            |   " << endl;
-	cout<< " |      |                                                     |         .@ @ @.     \\ | /     .@ @ @.          |   " << endl;
-	cout<< " |      |     G G G           A       M         M  E E E E    |        '@ @ @ @.  ___\\|/___  '@ @ @ @.         |   " << endl;
-	cout<< " |      |   G       G        A A      M M     M M  E          |        '@ @ @ @.     /|\\     '@ @ @ @'         |   " << endl;
-	cout<< " |      |  G                A   A     M  M   M  M  E          |         '@ @ @'     / | \\      @ @ @           |   " << endl;
-	cout<< " |      |  G     G G G     A A A A    M   M M   M  E E E      |           '''      /  |  \\      '''            |   " << endl;
-	cout<< " |      |  G       G G    A       A   M    M    M  E         /______________________________________________   |    " << endl;
-	cout<< " |      |   G     G  G   A         A  M         M  E        /                                               |  |    " << endl;
-	cout<< " |      |     G G    G  A           A M         M  E E E E /  M        M  E E E E E  N       N  U        U  |  |    " << endl;
-	cout<< " |      |_________________________________________________/   M M    M M  E          N N     N  U        U  |  |    " << endl;
-	cout<< " |                                                  |         M  M  M  M  E          N  N    N  U        U  |  |    " << endl;
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(h, 112);
+	cout<< "  _____________________________________________________________________________________________________________  " << endl;  
+	cout<< " |       _____________________________________________________            ...      \\  |  /      ...            | " << endl;
+	cout<< " |      |                                                     |         .@ @ @.     \\ | /     .@ @ @.          | " << endl;
+	cout<< " |      |     G G G           A       M         M  E E E E    |        '@ @ @ @.  ___\\|/___  '@ @ @ @.         | " << endl;
+	cout<< " |      |   G       G        A A      M M     M M  E          |        '@ @ @ @.     /|\\     '@ @ @ @'         | " << endl;
+	cout<< " |      |  G                A   A     M  M   M  M  E          |         '@ @ @'     / | \\      @ @ @           | " << endl;
+	cout<< " |      |  G     G G G     A A A A    M   M M   M  E E E      |           '''      /  |  \\      '''            | " << endl;
+	cout<< " |      |  G       G G    A       A   M    M    M  E         /______________________________________________   | " << endl;
+	cout<< " |      |   G     G  G   A         A  M         M  E        /                                               |  | " << endl;
+	cout<< " |      |     G G    G  A           A M         M  E E E E /  M        M  E E E E E  N       N  U        U  |  | " << endl;
+	cout<< " |      |_________________________________________________/   M M    M M  E          N N     N  U        U  |  | " << endl;
+	cout<< " |                                                  |         M  M  M  M  E          N  N    N  U        U  |  | " << endl;
 	cout<< " |           /\\        /\\        /\\                 |         M   M    M  E E E      N   N   N  U        U  |  | " << endl;
 	cout<< " |          /  \\      /  \\      /  \\                |         M        M  E          N    N  N  U        U  |  | " << endl;
 	cout<< " |         /|  |\\    /|  |\\    /|  |\\               |         M        M  E          N     N N   U      U   |  | " << endl;
-	cout<< " |          |  |      |  |      |  |                |         M        M  E E E E E  N       N    U U U     |  |    " << endl;
-	cout<< " |          |  |      |  |      |  |                |_______________________________________________________|  |    " << endl;
-	cout<< " |          |__|      |__|      |__|                                                                           |    " << endl;
-    cout<< " |           )(        )(        )(           1.  New Game                                                     |    " << endl;
-    cout<< " |          (  )      (  )      (  )          2.  Score Details                                                |    " << endl;
-    cout<< " |           )(        )(        )(           3.  How to play                                                  |    " << endl;
-    cout<< " |          (  )      (  )      (  )          4.  Credits                                                      |    " << endl;
-    cout<< " |           )(        )(        )(           5.  Exit                                                         |    " << endl;
-    cout<< " |                                                                                                             |    " << endl;
-    cout<< " ______________________________________________________________________________________________________________     " << endl;
+	cout<< " |          |  |      |  |      |  |                |         M        M  E E E E E  N       N    U U U     |  | " << endl;
+	cout<< " |          |  |      |  |      |  |                |_______________________________________________________|  | " << endl;
+	cout<< " |          |__|      |__|      |__|                                                                           | " << endl;
+    cout<< " |           )(        )(        )(           1.  New Game                                                     | " << endl;
+    cout<< " |          (  )      (  )      (  )          2.  Score Details                                                | " << endl;
+    cout<< " |           )(        )(        )(           3.  How to play                                                  | " << endl;
+    cout<< " |          (  )      (  )      (  )          4.  Credits                                                      | " << endl;
+    cout<< " |           )(        )(        )(           5.  Exit                                                         | " << endl;
+    cout<< " |_____________________________________________________________________________________________________________| " << endl;
+    cout<< "                                                                                                                 " << endl;
+    SetConsoleTextAttribute(h, whiteColor);
     cout<<"              Enter your choice  >>>>  ";
 }
 
 void gameOverInterface(){
     system("cls");
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(h, 112);
     cout<<"   ______________________________________________________________________________________________________________  "<<endl;
 	cout<<"  |                                                                                                              | "<<endl;
 	cout<<"  |                                                                                                              | "<<endl;
@@ -696,72 +765,250 @@ void gameOverInterface(){
     cout<<"  |                                                                                                              | "<<endl;
     cout<<"  |                                                                                                              | "<<endl;
     cout<<"  |______________________________________________________________________________________________________________| "<<endl;
-    returnToMainMenu();             //Call Function to Return to main Menu
+    SetConsoleTextAttribute(h, whiteColor);
 }
 
 void instructionInterface(){
     system("cls");
-	cout << "____________________________________________________________________________________________________"<< endl;
-	cout << "|                                                                                                  |" << endl;
-	cout << "|    H    H  OOOOOO   W     W      TTTTTTTT   OOOOOO         PPPPPP   L       AAAAAA    Y     Y    |" << endl;
-	cout << "|    H    H  O    O   W     W         Tl      O    O         P    P   L       A    A    Y     Y    |" << endl;
-	cout << "|    HHHHHH  O    O   W  W  W         Tl      O    O         PPPPPP   L       AAAAAA    YYYYYYY    |" << endl;
-	cout << "|    H    H  O    O   W  W  W         Tl      O    O         P        L       A    A          Y    |" << endl;	
-	cout << "|    H    H  OOOOOO   WWW WWW         Tl      OOOOOO         P        LLLLL   A    A     YYYYYY    |" << endl;
-	cout << "|                                                                                                  |" << endl; 
-	cout << "|                                                                                                  |" << endl;	
-	cout << "|                                                                               ..                 |" << endl;
-	cout << "| Avoid the Ball Landing on the Spikes                                       ,@@@@@@,              |" << endl;
-	cout << "|                                                                           @@@@@@@@@@             |" << endl;
-	cout << "| Use 'W' to mall the ball Up inorder to Avoid Spkies                      @@@@@@@@@@@@            |" << endl;
-	cout << "|                                                                           @@@@@@@@@@             |" << endl;
-	cout << "| Clear as many Spikes you can in order to score Points                      '@@@@@@'  A           |" << endl;
-	cout << "|                                                                               ''    AAA          |" << endl;
-	cout << "|                                                                                    AAAAA         |" << endl;
-	cout << "|                                                                                   AAAAAAA        |" << endl;
-	cout << "|                                                                                                  |" << endl;
-	cout << "|                                                                                                  |" << endl;
-	cout << "|              Earn "<<setw(2) << gameScoreIncrementConstant << " marks for clearing any Obstacle                                             |" << endl;
-	cout << "|                                                                                                  |" << endl;
-	cout << "|              Earn "<<setw(2) << "05" << " bonus Marks for keeping the ball On the Ground                              |" << endl;
-	cout << "|                                                                                                  |" << endl;
-	cout << "|                                                                                                  |" << endl;	
-	cout << "____________________________________________________________________________________________________" << endl;
-
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(h, 112);
+	cout<<"   ______________________________________________________________________________________________________________  " <<endl;
+	cout << " |                                                                                                             | " << endl;
+	cout << " |    H    H  OOOOOO   W     W      TTTTTTTT   OOOOOO         PPPPPP   L       AAAAAA    Y     Y               | " << endl;
+	cout << " |    H    H  O    O   W     W         Tl      O    O         P    P   L       A    A    Y     Y               | " << endl;
+	cout << " |    HHHHHH  O    O   W  W  W         Tl      O    O         PPPPPP   L       AAAAAA    YYYYYYY               | " << endl;
+	cout << " |    H    H  O    O   W  W  W         Tl      O    O         P        L       A    A          Y               | " << endl;	
+	cout << " |    H    H  OOOOOO   WWW WWW         Tl      OOOOOO         P        LLLLL   A    A     YYYYYY               | " << endl;
+	cout << " |                                                                                                             | " << endl; 
+	cout << " |                                                                                                             | " << endl;	
+	cout << " |                                                                               ..                            | " << endl;
+	cout << " | Avoid Landing the Ball on the Spikes                                       ,@@@@@@,                         | " << endl;
+	cout << " |                                                                           @@@@@@@@@@                        | " << endl;
+	cout << " | Use 'W' to move the ball Up to Avoid Spkies                              @@@@@@@@@@@@                       | " << endl;
+	cout << " |                                                                           @@@@@@@@@@                        | " << endl;
+	cout << " | Clear as many Spikes you can in order to score Points                      '@@@@@@'  A                      | " << endl;
+	cout << " |                                                                               ''    AAA                     | " << endl;
+	cout << " |                                                                                    AAAAA                    | " << endl;
+	cout << " |                                                                                   AAAAAAA                   | " << endl;
+	cout << " |              Collect the highest number of points in " << setw(3) << gameplayTimeUpdater << " seconds                                 |" << endl;
+	cout << " |                                                                                                             | " << endl;
+	cout << " |              Earn "<<setw(2) << gameScoreIncrementConstant << " marks for clearing any Obstacle                                             |" << endl;
+	cout << " |                                                                                                             | " << endl;
+	cout << " |              Earn "<<setw(2) << gameScoreBonusConstant << " bonus Marks for keeping the ball On the Ground                              |" << endl;
+	cout << " |                                                                                                             | " << endl;	
+	cout << " |_____________________________________________________________________________________________________________| " << endl;
+    cout << "                                                                                                                 " << endl;
+    SetConsoleTextAttribute(h,whiteColor);
 }
 
 void scoreDisplayInterface(){
     system("cls");
-    cout << "____________________________________________________________________________________________________" << endl;
-	cout << "|                                                                                                  |" << endl;
-	cout << "|        SSSSSSSSSS     CCCCCCCCCC      OOOOOOOO      RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
-	cout << "|        SSSSSSSSSS     CCCCCCCCCC     OOOOOOOOOO     RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
-	cout << "|        SSSS           CCCC           OOOO  OOOO     RRRR   RRR     EEEE           SSSS           |" << endl;
-	cout << "|        SSSSSSSSSS     CCCC           OOOO  OOOO     RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
-	cout << "|        SSSSSSSSSS     CCCC           OOOO  OOOO     RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS     |  " << endl;
-	cout << "|             SSSSS     CCCC           OOOO  OOOO     RRRR RRRR      EEEE                 SSSS     |" << endl;
-	cout << "|        SSSSSSSSSS     CCCCCCCCCC     OOOOOOOOOO     RRRR  RRRR     EEEEEEEEEE     SSSSSSSSSS     |" << endl;
-	cout << "|        SSSSSSSSSS     CCCCCCCCCC      OOOOOOOO      RRRR   RRRR    EEEEEEEEEE     SSSSSSSSSS     |" << endl;
-	cout << "|                                                                                                  |" << endl;
-	cout << "|" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "   |" <<endl;
-	cout << "|" << left   << setw(29) <<"" << "|"<< setw(15) << "Player Name " << "|" << setw(10) << "Score" << "|" << setw(41) << "" << "|" << endl;
-	cout << "|" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "   |" <<endl;
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(h, 240);
+     cout<< "  ______________________________________________________________________________________________________________  " <<endl;
+	cout << " |                                                                                                              | " << endl;
+	cout << " |        SSSSSSSSSS     CCCCCCCCCC      OOOOOOOO      RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS                 | " << endl;
+	cout << " |        SSSSSSSSSS     CCCCCCCCCC     OOOOOOOOOO     RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS                 | " << endl;
+	cout << " |        SSSS           CCCC           OOOO  OOOO     RRRR   RRR     EEEE           SSSS                       | " << endl;
+	cout << " |        SSSSSSSSSS     CCCC           OOOO  OOOO     RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS                 | " << endl;
+	cout << " |        SSSSSSSSSS     CCCC           OOOO  OOOO     RRRRRRRRRR     EEEEEEEEEE     SSSSSSSSSS                 | " << endl;
+	cout << " |             SSSSS     CCCC           OOOO  OOOO     RRRR RRRR      EEEE                 SSSS                 | " << endl;
+	cout << " |        SSSSSSSSSS     CCCCCCCCCC     OOOOOOOOOO     RRRR  RRRR     EEEEEEEEEE     SSSSSSSSSS                 | " << endl;
+	cout << " |        SSSSSSSSSS     CCCCCCCCCC      OOOOOOOO      RRRR   RRRR    EEEEEEEEEE     SSSSSSSSSS                 | " << endl;
+	cout << " |                                                                                                              | " << endl;
+    SetConsoleTextAttribute(h, 240);  
+	cout << " |" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "               | " <<endl;
+	cout << " |" << left   << setw(29) <<"" << "|"<< setw(15) << "Player Name " << "|" << right << setw(10) << "Score" << left << "|" << setw(41) << "" << "            | " << endl;
+	cout << " |" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "               | " <<endl;
 	for(int i = 0; i < 10; i++ ){
-		cout << left << "|"<< setw(29) << "" << "|" << setw(15) << playerStatArray[i].playerName << "|" << setw(10) << playerStatArray[i].playerScore  << "|"<< setw(41) << "" << "|" << endl;
+        if(i == 0){
+            scoreColorDesigner = 100;       //Gold Color input
+        }else if(i == 1){
+            scoreColorDesigner = 910;       //Silver color input
+        }else if(i == 2){
+            scoreColorDesigner = 78;        //Bronxe color input
+        }else{
+            scoreColorDesigner = 240; //Default Color
+        }
+		cout << left << " |"<< setw(29) << "" << "|";
+        SetConsoleTextAttribute(h, scoreColorDesigner);
+        cout << setw(15) << playerStatArray[i].playerName;
+        SetConsoleTextAttribute(h, 240);
+        cout << "|";
+        SetConsoleTextAttribute(h, scoreColorDesigner);
+        cout << right << setw(10) << playerStatArray[i].playerScore;
+        SetConsoleTextAttribute(h, 240);
+        cout << left << "|"<< setw(41) << "" << "            | " << endl;
 	}
-	cout << "|" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "   |" <<endl;	
-	cout << "|                                                                                                  |" << endl;
-	cout << "____________________________________________________________________________________________________" << endl;
+	cout << " |" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "               | " <<endl;	
+	cout << " |______________________________________________________________________________________________________________| " << endl;
+    cout << "                                                                                                                  " << endl;
+    SetConsoleTextAttribute(h, whiteColor);
+}
 
 
+void highScoreGameOverInterface(){
+    system("cls");
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(h, 112);
+    cout<<"   ______________________________________________________________________________________________________________  "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |                                              CONGRATULATION                                                  | "<<endl;
+    cout<<"  |                                          =======================                                             | "<<endl;
+    cout<<"  |                                                                                                              |"<<endl;
+    cout<<"  |         H     H  I I I    G G G G   H     H        S S S     C C C   O O O   R R R   E E E E                 | "<<endl;
+    cout<<"  |         H     H    I     G          H     H       S        C        O     O  R    R  E                       | "<<endl;
+    cout<<"  |         H H H H    I    G    G G G  H H H H        S S S   C        O     O  R R R   E E E                   | "<<endl;
+    cout<<"  |         H     H    I     G     G G  H     H             S  C        O     O  R  R    E                       | "<<endl;
+    cout<<"  |         H     H  I I I    G G G  G  H     H        S S S     C C C   O O O   R    R  E E E E                 | "<<endl;
+    cout<<"  |        =================================================================================================     | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                     YOUR FINAL SCORE IS >>>>>>>>>> " << setw(3) << gameScore << "                                       | "<<endl;
+    cout<<"  |         (     )    (      )                                                       (     )    (      )        | "<<endl;
+    cout<<"  |          )   (      )    (                                                         )   (      )    (         | "<<endl;
+    cout<<"  |         (     )    (      )                                                       (     )    (      )        | "<<endl;
+    cout<<"  |          )   (      )    (                                                         )   (      )    (         | "<<endl;
+    cout<<"  |         (     )    (      )                                                       (     )    (      )        | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |______________________________________________________________________________________________________________| "<<endl;
+    SetConsoleTextAttribute(h, whiteColor);
 }
 
 void creditsInterface(){
-    //fdgfdhbfgbgnbfgnfg
+    system("cls");
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(h, 112);
+	cout<<"   ______________________________________________________________________________________________________________ "<<endl;
+	cout << " |            ============================================================================                    | " << endl;
+	cout << " |               C C C  R R R R   E E E E E  D D D D    I I I I I  T T T T T    S S S                         | " << endl;
+	cout << " |             C        R      R  E            D     D      I          T      S       S                       | " << endl;
+	cout << " |            C         R      R  E            D      D     I          T      S                               | " << endl;
+	cout << " |            C         R R R R   E E E E      D      D     I          T        S S S                         | " << endl;
+	cout << " |            C         R  R      E            D      D     I          T              S                       | " << endl;
+	cout << " |             C        R    R    E            D     D      I          T              S                       | " << endl;
+	cout << " |               C C C  R      R  E E E E E  D D D D    I I I I I      T        S S S                         | " << endl;
+	cout << " |           ============================================================================                     | " << endl;
+	cout << " |                                                                                                            | " << endl;
+	cout << " | >>>>>> BOUNCY BALL Version 1.0                                                                             | " << endl;
+	cout << " |                                                                                                            | " << endl;	   
+	cout << " | >>>>>> Game Project Development Team:                                                                      | " << endl;
+	cout << " |                          Akila Benaragama - File handling and Player Data Management                       | " << endl;
+	cout << " |                                                                                                            | " << endl;
+	cout << " |                          Akila Pilapitiya - Ingame Logic Development and Code Organization                 | " << endl;
+	cout << " |                                                                                                            | " << endl;       
+	cout << " |                          Chanuka Herath   - Inputs Handling and Gameplay Updates                           | " << endl;
+	cout << " |                                                                                                            | " << endl;
+	cout << " |                          Shuhail Shafeek  - Graphical Interface Development and Management                 | " << endl;
+	cout << " |                                                                                                            | " << endl;
+	cout << " | >>>>>>  Project Duration  - 2 Weeks                                                                        | " << endl;
+	cout << " |                                      ***********                                                           | " << endl;
+	cout << " |____________________________________________________________________________________________________________| " << endl;
+    cout << "                                                                                                                " << endl;
+    SetConsoleTextAttribute(h, whiteColor);
+}
+
+void timeOutGameOverInterface(){
+    system("cls");
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(h, 112);
+    cout<<"   ______________________________________________________________________________________________________________  "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+	cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |      ====================================================================================================    | "<<endl;
+    cout<<"  |              T T T T T  I I I I I  M         M  E E E E E         O O O     U         U  T T T T T           | "<<endl;
+    cout<<"  |                  T          I      M M     M M  E               O       O   U         U      T               | "<<endl;
+    cout<<"  |                  T          I      M  M   M  M  E              O         O  U         U      T               | "<<endl;
+    cout<<"  |                  T          I      M   M M   M  E E E E        O         O  U         U      T               | "<<endl;
+    cout<<"  |                  T          I      M    M    M  E              O         O  U         U      T               | "<<endl;
+    cout<<"  |                  T          I      M         M  E               O       O    U       U       T               | "<<endl;
+    cout<<"  |                  T      I I I I I  M         M  E E E E E         O O O        U U U         T               | "<<endl;
+    cout<<"  |        =================================================================================================     | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |                                                                                                              | "<<endl;
+    cout<<"  |______________________________________________________________________________________________________________| "<<endl;
+    SetConsoleTextAttribute(h, whiteColor);
+}
+
+
+void goodByeExitInterface(){
+    system("cls");
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);  //For console text color changing
+    SetConsoleTextAttribute(h,241);
+    cout << "\n\n\n\n" << endl;
+    cout<<"           =================================================================================================       "<<endl;
+    cout<<"                   G G G G      O O O        O O O     D D D D          B B B    Y       Y  E E E E E              "<<endl;
+    cout<<"                 G        G   O       O    O       O       D   D        B     B   Y     Y   E                      "<<endl;
+    cout<<"                G            O         O  O         O      D    D       B     B    Y   Y    E                      "<<endl;
+    cout<<"                G     G G G  O         O  O         O      D    D       B B B       Y Y     E E E                  "<<endl;
+    cout<<"                G      G  G  O         O  O         O      D    D       B     B      Y      E                      "<<endl;
+    cout<<"                 G     G  G   O       O    O       O       D   D        B     B      Y      E                      "<<endl;
+    cout<<"                  G G G   G     O O O        O O O     D D D D          B B B        Y      E E E E E              "<<endl;
+    cout<<"           =================================================================================================       "<<endl;
+    SetConsoleTextAttribute(h,whiteColor);
+}
+
+void gameLoadInterface(){
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);  //For console text color changing
+    system("cls");
+    SetConsoleTextAttribute(h,12);
+    cout<<"\n\n\n\n";
+	cout<<"\t\t\t   LOADING ............          3 3 3 3 3            "<<endl;
+	cout<<"\t\t\t                                           3           "<<endl;
+	cout<<"\t\t\t                                            3        "<<endl;
+	cout<<"\t\t\t                                           3            "<<endl;
+	cout<<"\t\t\t                                 3 3 3 3 3                 "<<endl;
+	cout<<"\t\t\t                                           3                "<<endl;
+	cout<<"\t\t\t                                            3             "<<endl;
+	cout<<"\t\t\t                                           3             "<<endl;
+	cout<<"\t\t\t                                 3 3 3 3 3               "<<endl;
+
+    this_thread::sleep_for(chrono::seconds(1));  //sleep console for specified time 
+    system("cls");
+
+
+	cout<<"\n\n\n\n";
+	cout<<"\t\t\t   LOADING ............             2 2 2             "<<endl;
+	cout<<"\t\t\t                                  2       2            "<<endl;
+	cout<<"\t\t\t                                 2         2         "<<endl;
+	cout<<"\t\t\t                                          2            "<<endl;
+	cout<<"\t\t\t                                         2              "<<endl;
+	cout<<"\t\t\t                                       2           "<<endl;
+	cout<<"\t\t\t                                     2                  "<<endl;
+	cout<<"\t\t\t                                   2                      "<<endl;
+	cout<<"\t\t\t                                 2 2 2 2 2 2            "<<endl;
+
+    this_thread::sleep_for(chrono::seconds(1));  //sleep console for specified time 
+    system("cls");
+
+	cout<<"\n\n\n\n";
+	cout<<"\t\t\t   LOADING ............                                                                         "<<endl;
+	cout<<"\t\t\t                                                                            "<<endl;
+	cout<<"\t\t\t         S S S   T T T T T        A        R R R R    T T T T T                               "<<endl;
+	cout<<"\t\t\t        S     S      T           A A       R       R      T                        "<<endl;
+	cout<<"\t\t\t        S            T          A   A      R       R      T                        "<<endl;
+	cout<<"\t\t\t          S S        T         A     A     R R R R        T                         "<<endl;
+	cout<<"\t\t\t              S      T        A A A A A    R   R          T                        "<<endl;
+	cout<<"\t\t\t        S     S      T       A         A   R     R        T                        "<<endl;
+	cout<<"\t\t\t         S S S       T      A           A  R      R       T                           "<<endl;
+    SetConsoleTextAttribute(h,7);
+    this_thread::sleep_for(chrono::seconds(1));  //sleep console for specified time 
+    system("cls");
 }
 
 
 
+//-------------------------------------------------------------------------------------------------------------------------
 
 //                                   T E S T I N G   A S S I S T A N C E
 
@@ -771,6 +1018,4 @@ void gamePlayTestingDetails(){
     cout << "dynamicDistanceAdjustNegetive: "<< dynamicDistanceAdjustNegetive << endl;
     cout << "ballPositionFromTop: " << ballPositionFromTop << endl;
     cout << "obstacleMoveRate: " << obstacleMoveRate << endl;
-
-
 }
