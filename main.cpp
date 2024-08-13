@@ -69,7 +69,7 @@ const int gameScoreIncrementConstant = 5;               //Increment of score for
 const int gameScoreBonusConstant = 1;                   //Bonus for keeping the ball on the ground
 const int gameScoreReset = 0;                           //Reset Value for the Game Score
 const string playerNameReset = "";                      //Reset Value for Player name
-const int numberOfPlayersExpectedConstant = 10;         //Size of the playerStatArray
+const int numberOfPlayersExpectedConstant = 30;         //Size of the playerStatArray
 const bool highScoreStatusConstant = false;             //Reset the high score status to false
 const int timeoutDisplayRefreshConstant = 2;            //Number Of seconds the timeout display must be shown
 
@@ -335,7 +335,9 @@ int gameInitialize(){//AKILA
         ballFall();                                                         //Call the Function to make the Ball Fall
         gamePhaseChanger();                                                 //Changes the Phase of Gameplay based on score
         //Conditions to loop the game and Mark the scores
-        gameScore += gameScoreBonusConstant;
+        if(ballPositionFromTop == ballPositionFromTopConstant){
+            gameScore += gameScoreBonusConstant;
+        }
         if((dynamicDistanceAdjust <= 0) && (dynamicDistanceAdjustNegetive <= 2)){
             dynamicDistanceAdjust = dynamicDistanceAdjustConstant;                 //Reset dynamicDistanceAdjust to default
             dynamicDistanceAdjustNegetive = dynamicDistanceAdjustNegetiveConstant; //Reset dynamicDistanceAdjustNegetive to default

@@ -11,3 +11,7 @@ ASD,36
 Hello,136
 aaa,16
 qqq,136
+Cat,36
+cat,104
+dog,121
+Kitty,35
