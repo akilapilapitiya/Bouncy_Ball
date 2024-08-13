@@ -96,10 +96,10 @@ const int exitScreenRefreshConstant = 3;        //Refresh time of the exit scree
 
 
 
-//Colors for Designer
+//Colors for Design
 const int whiteColor = 7;
 const int yellowColor = 6;
-const int redColor = 4;
+const int redColor = 780;
 const int greenColor = 2;
 const int greyColor = 8;
 const int blueColor = 3;
@@ -157,6 +157,9 @@ int scoreStoreVariable;             //Used to ssstream the values in file readin
 string nameStoreDummyVariable;      //Used to store the name while sorting the scores in descending order
 int scoreStoreDummyVariable;        //Used to store the name while sorting the scores in descending order
 
+
+//Design Variables
+int scoreColorDesigner;             //Color change in score display
 
 
 //----------------------------------------------------------------------------------------------------------------------------------------------
@@ -662,6 +665,7 @@ int main(){
 void splashScreenDraw(){
     system("cls");
     HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(h, blueColor);
     cout<<"   ______________________________________________________________________________________________________________  "<<endl;
 	cout<<"  |                                                                                                              | "<<endl;
 	cout<<"  |                                                                                                              | "<<endl;
@@ -688,6 +692,7 @@ void splashScreenDraw(){
     cout<<"  |    BOUNCYBALLBOUNCYBAL          BOU             BAL  BOUNCYBALL  BOUNCYBALL      |       =========== |       | "<<endl;
     cout<<"  |                                                                                  |___________________|       | "<<endl;
     cout<<"  |______________________________________________________________________________________________________________| "<<endl;
+    SetConsoleTextAttribute(h, whiteColor);
 }
 
 
@@ -724,6 +729,8 @@ void gameMenuScreenDraw(){
 
 void gameOverInterface(){
     system("cls");
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(h, redColor);
     cout<<"   ______________________________________________________________________________________________________________  "<<endl;
 	cout<<"  |                                                                                                              | "<<endl;
 	cout<<"  |                                                                                                              | "<<endl;
@@ -746,7 +753,7 @@ void gameOverInterface(){
     cout<<"  |                                                                                                              | "<<endl;
     cout<<"  |                                                                                                              | "<<endl;
     cout<<"  |______________________________________________________________________________________________________________| "<<endl;
-
+    SetConsoleTextAttribute(h, whiteColor);
 }
 
 void instructionInterface(){
@@ -800,7 +807,24 @@ void scoreDisplayInterface(){
 	cout << "|" << left   << setw(29) <<"" << "|"<< setw(15) << "Player Name " << "|" << right << setw(10) << "Score" << left << "|" << setw(41) << "" << "|" << endl;
 	cout << "|" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "   |" <<endl;
 	for(int i = 0; i < 10; i++ ){
-		cout << left << "|"<< setw(29) << "" << "|" << setw(15) << playerStatArray[i].playerName << "|"  << right << setw(10) << playerStatArray[i].playerScore   << left << "|"<< setw(41) << "" << "|" << endl;
+        if(i == 0){
+            scoreColorDesigner = 100;       //Gold Color input
+        }else if(i == 1){
+            scoreColorDesigner = 910;       //Silver color input
+        }else if(i == 2){
+            scoreColorDesigner = 78;        //Bronxe color input
+        }else{
+            scoreColorDesigner = whiteColor; //Default Color
+        }
+		cout << left << "|"<< setw(29) << "" << "|";
+        SetConsoleTextAttribute(h, scoreColorDesigner);
+        cout << setw(15) << playerStatArray[i].playerName;
+        SetConsoleTextAttribute(h, whiteColor);
+        cout << "|";
+        SetConsoleTextAttribute(h, scoreColorDesigner);
+        cout << right << setw(10) << playerStatArray[i].playerScore;
+        SetConsoleTextAttribute(h, whiteColor);
+        cout << left << "|"<< setw(41) << "" << "|" << endl;
 	}
 	cout << "|" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "   |" <<endl;	
 	cout << "|__________________________________________________________________________________________________|" << endl;
@@ -809,6 +833,8 @@ void scoreDisplayInterface(){
 
 void highScoreGameOverInterface(){
     system("cls");
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(h, greenColor);
     cout<<"   ______________________________________________________________________________________________________________  "<<endl;
 	cout<<"  |                                                                                                              | "<<endl;
 	cout<<"  |                                                                                                              | "<<endl;
@@ -832,6 +858,7 @@ void highScoreGameOverInterface(){
     cout<<"  |                                                                                                              | "<<endl;
     cout<<"  |                                                                                                              | "<<endl;
     cout<<"  |______________________________________________________________________________________________________________| "<<endl;
+    SetConsoleTextAttribute(h, whiteColor);
 }
 
 void creditsInterface(){
@@ -840,6 +867,8 @@ void creditsInterface(){
 
 void timeOutGameOverInterface(){
     system("cls");
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(h, yellowColor);
     cout<<"   ______________________________________________________________________________________________________________  "<<endl;
 	cout<<"  |                                                                                                              | "<<endl;
 	cout<<"  |                                                                                                              | "<<endl;
@@ -863,11 +892,13 @@ void timeOutGameOverInterface(){
     cout<<"  |                                                                                                              | "<<endl;
     cout<<"  |                                                                                                              | "<<endl;
     cout<<"  |______________________________________________________________________________________________________________| "<<endl;
+    SetConsoleTextAttribute(h, whiteColor);
 }
 
 
 void goodByeExitInterface(){
     system("cls");
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
     cout<<"   ______________________________________________________________________________________________________________  "<<endl;
 	cout<<"  |                                                                                                              | "<<endl;
 	cout<<"  |                                                                                                              | "<<endl;
@@ -904,6 +935,4 @@ void gamePlayTestingDetails(){
     cout << "dynamicDistanceAdjustNegetive: "<< dynamicDistanceAdjustNegetive << endl;
     cout << "ballPositionFromTop: " << ballPositionFromTop << endl;
     cout << "obstacleMoveRate: " << obstacleMoveRate << endl;
-
-
 }

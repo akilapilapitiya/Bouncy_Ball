@@ -15,3 +15,5 @@ Cat,36
 cat,104
 dog,121
 Kitty,35
+Sea,41
+asd,16
