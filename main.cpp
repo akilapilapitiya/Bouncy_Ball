@@ -512,8 +512,8 @@ int gameDraw(){
     cout << "SCORE: "  << setw(4)<< gameScore << setw(30) << "" << "Remaining Time: ";
     SetConsoleTextAttribute(h, gameTimeColorChanger); 
     cout << setw(3) << remainingTime;
-    SetConsoleTextAttribute(h, whiteColor);
     cout  << " seconds";
+    SetConsoleTextAttribute(h, whiteColor);
     return(0);
 }
 
@@ -847,7 +847,6 @@ void scoreDisplayInterface(){
 	}
 	cout << " |" << left << setw(29) << "" << setw(25) << "----------------------------" << setw(38) << "" << "               | " <<endl;	
 	cout << " |______________________________________________________________________________________________________________| " << endl;
-    cout << "                                                                                                                  " << endl;
     SetConsoleTextAttribute(h, whiteColor);
 }
 
@@ -856,31 +855,31 @@ void highScoreGameOverInterface(){
     system("cls");
     HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(h, 112);
-	cout<<"  ______________________________________________________________________________________________________________  "<<endl;
-	cout<<" |                                                                                                              | "<<endl;
-	cout<<" |                                                                                                              | "<<endl;
-	cout<<" |                                              CONGRATULATION                                                  | "<<endl;
-    cout<<" |        ======================================================================================                | "<<endl;
-    cout<<" |         H     H  I I I    G G G G   H     H        S S S     C C C   O O O   R R R   E E E E                 | "<<endl;
-    cout<<" |         H     H    I     G          H     H       S        C        O     O  R    R  E                       | "<<endl;
-    cout<<" |         H H H H    I    G    G G G  H H H H        S S S   C        O     O  R R R   E E E                   | "<<endl;
-    cout<<" |         H     H    I     G     G G  H     H             S  C        O     O  R  R    E                       | "<<endl;
-    cout<<" |         H     H  I I I    G G G  G  H     H        S S S     C C C   O O O   R    R  E E E E                 | "<<endl;
-    cout<<" |        ======================================================================================                | "<<endl;
-    cout<<" |                                                                                                              | "<<endl;
-    cout<<" |                                                                                                              | "<<endl;
-    cout<<" |                                                                                                              | "<<endl;
+	cout<<"  ______________________________________________________________________________________________________________  " << endl;
+	cout<<" |                                                                                                              | " << endl;
+	cout<<" |                                                                                                              | " << endl;
+	cout<<" |                                              CONGRATULATION                                                  | " << endl;
+    cout<<" |        ======================================================================================                | " << endl;
+    cout<<" |         H     H  I I I    G G G G   H     H        S S S     C C C   O O O   R R R   E E E E                 | " << endl;
+    cout<<" |         H     H    I     G          H     H       S        C        O     O  R    R  E                       | " << endl;
+    cout<<" |         H H H H    I    G    G G G  H H H H        S S S   C        O     O  R R R   E E E                   | " << endl;
+    cout<<" |         H     H    I     G     G G  H     H             S  C        O     O  R  R    E                       | " << endl;
+    cout<<" |         H     H  I I I    G G G  G  H     H        S S S     C C C   O O O   R    R  E E E E                 | " << endl;
+    cout<<" |        ======================================================================================                | " << endl;
+    cout<<" |                                                                                                              | " << endl;
+    cout<<" |                                                                                                              | " << endl;
+    cout<<" |                                                                                                              | " << endl;
     cout<<" |                                     YOUR FINAL SCORE IS >>>>>>>>>> " << setw(3) << gameScore << "                                       | "<<endl;
-    cout<<" |         (     )    (      )                                                       (     )    (      )        | "<<endl;
-    cout<<" |          )   (      )    (                                                         )   (      )    (         | "<<endl;
-    cout<<" |         (     )    (      )                                                       (     )    (      )        | "<<endl;
-    cout<<" |          )   (      )    (                                                         )   (      )    (         | "<<endl;
-    cout<<" |         (     )    (      )                                                       (     )    (      )        | "<<endl;
-    cout<<" |                                                                                                              | "<<endl;
-    cout<<" |                                                                                                              | "<<endl;
-    cout<<" |                                                                                                              | "<<endl;
-    cout<<" |______________________________________________________________________________________________________________| "<<endl;
-    cout<<"                                                                                                                  "<<endl;
+    cout<<" |         (     )    (      )                                                       (     )    (      )        | " << endl;
+    cout<<" |          )   (      )    (                                                         )   (      )    (         | " << endl;
+    cout<<" |         (     )    (      )                                                       (     )    (      )        | " << endl;
+    cout<<" |          )   (      )    (                                                         )   (      )    (         | " << endl;
+    cout<<" |         (     )    (      )                                                       (     )    (      )        | " << endl;
+    cout<<" |                                                                                                              | " << endl;
+    cout<<" |                                                                                                              | " << endl;
+    cout<<" |                                                                                                              | " << endl;
+    cout<<" |______________________________________________________________________________________________________________| " << endl;
+    cout<<"                                                                                                                  " << endl;
     SetConsoleTextAttribute(h, whiteColor);
 }
 

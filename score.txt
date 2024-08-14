@@ -4,3 +4,5 @@ Akila,19
 Cat,12
 dog,24
 Shuhail,5
+ABC,9
+ABBC,28
