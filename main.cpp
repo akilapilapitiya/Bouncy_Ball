@@ -587,7 +587,7 @@ int highScoreIdentifier(){
 
 //FUNCTION for the GAME STARTUP
 int gameStartUp(){
-    fileCreateFunction();                        //Call thew file Create Function
+    //fileCreateFunction();                        //Call thew file Create Function
     scoreFileReader();                          //Read the Score File in the Array
     scoreArraySort();                           //Sort the User Details Array in Ascending Order
 
@@ -1055,8 +1055,9 @@ void gameLoadInterface(){
 	cout<<" |                                                   * * * * *                                                  | "<<endl;
     cout<<" |______________________________________________________________________________________________________________| "<<endl;
 	cout<<"                                                                                                                  "<<endl;
-    system ("cls");
+    this_thread::sleep_for(chrono::seconds(1));  //sleep console for specified time 
     SetConsoleTextAttribute(h,whiteColor);
+    system ("cls");
 }
 
 
