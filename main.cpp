@@ -772,7 +772,7 @@ void instructionInterface(){
     system("cls");
     HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(h, 112);
-	cout<<"   ______________________________________________________________________________________________________________  " <<endl;
+	cout<<"   ______________________________________________________________________________________________________________" <<endl;
 	cout << " |                                                                                                             | " << endl;
 	cout << " |    H    H  OOOOOO   W     W      TTTTTTTT   OOOOOO         PPPPPP   L       AAAAAA    Y     Y               | " << endl;
 	cout << " |    H    H  O    O   W     W         Tl      O    O         P    P   L       A    A    Y     Y               | " << endl;
@@ -790,11 +790,11 @@ void instructionInterface(){
 	cout << " |                                                                               ''    AAA                     | " << endl;
 	cout << " |                                                                                    AAAAA                    | " << endl;
 	cout << " |                                                                                   AAAAAAA                   | " << endl;
-	cout << " |              Collect the highest number of points in " << setw(3) << gameplayTimeUpdater << " seconds                                 |" << endl;
+	cout << " |              Collect the highest number of points in " << setw(3) << gameplayTimeUpdater << " seconds                                            | " << endl;
 	cout << " |                                                                                                             | " << endl;
-	cout << " |              Earn "<<setw(2) << gameScoreIncrementConstant << " marks for clearing any Obstacle                                             |" << endl;
+	cout << " |              Earn "<<setw(2) << gameScoreIncrementConstant << " marks for clearing any Obstacle                                                        | " << endl;
 	cout << " |                                                                                                             | " << endl;
-	cout << " |              Earn "<<setw(2) << gameScoreBonusConstant << " bonus Marks for keeping the ball On the Ground                              |" << endl;
+	cout << " |              Earn "<<setw(2) << gameScoreBonusConstant << " bonus Marks for keeping the ball On the Ground                                         | " << endl;
 	cout << " |                                                                                                             | " << endl;	
 	cout << " |_____________________________________________________________________________________________________________| " << endl;
     cout << "                                                                                                                 " << endl;
@@ -1005,6 +1005,9 @@ void gameLoadInterface(){
     this_thread::sleep_for(chrono::seconds(1));  //sleep console for specified time 
     system("cls");
 }
+
+
+
 
 
 
