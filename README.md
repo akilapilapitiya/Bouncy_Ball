@@ -1,11 +1,6 @@
+
 # Bouncy Ball
 
-Project Created only with the use of Default C++ libraries
-
-
-## Contributors
-
-- [Shuhail Shafeek](https://github.com/Shuhail-hub)
-- [Akila Benaragama](https://github.com/Benaragama-003)
-- [Chanuka Herath](https://github.com/herathhmmc)
+This is an attempt to create the classic Bouncy Ball game to run in the terminal. 
+The project is based on native C++ libraries and does not use any specialized graphics libraries.
 
