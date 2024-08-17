@@ -44,7 +44,7 @@ string drawObstacle[] = {"   A   ",    //drawObstacle[0]
 
 //Game Draw related Constants
 const bool gameOverStatusConstant = false;              //Game over status set to false by Default
-const int sleepTimeConstant = 300;                      //Ingame Console Refresh time in milli seconds
+const int sleepTimeConstant = 200;                      //Ingame Console Refresh time in milli seconds
 
 
 //Obstacle and Ball draw RESET constants
@@ -60,7 +60,7 @@ const int gameplayTimeConstant = (gameplayTimeUpdater * 1000);  //Convert gamepl
 
 //Ball Related Controls
 const int maximumHeightTheBallCanMoveConstant = 2;      //Maximum height the ball is allowed to move
-const int ballMoveUpToKeyPressConstant = 3;             //With each Keypress number of lines the ball moves up 
+const int ballMoveUpToKeyPressConstant = 4;             //With each Keypress number of lines the ball moves up 
 const int ballFallRateConstant = 2;                     //Rate in which the ball falls down
 
 
@@ -88,7 +88,7 @@ int gameSpeedControllArray[] = {20,      //gameSpeedControllArray[0]  First Spee
                                 60};     //gameSpeedControllArray[2]  Third Speed Increment
 
 const int gameSpeedControlPointerConstant = 0;  //Reset check loop value to zero
-const int speedDeltaConstant = 4;               //Rate of change in obstacle movement speed
+const int speedDeltaConstant = 5;               //Rate of change in obstacle movement speed
 
 //Game Exit Screen Refresh timer
 const int exitScreenRefreshConstant = 3;        //Refresh time of the exit screen in seconds
@@ -317,6 +317,7 @@ void gameInstructions(){
 int gameInitialize(){
     gameVariableResetFunction();                                            //Call the reset Function
     system("cls");                                                          //Refresh the Console
+    system("color 70");
     cout << "\n\n\n\n\n\n\n\n";
     cout << "                     _______________________ " << endl;
     cout << "                    |                       |" << endl;

@@ -1,6 +1,0 @@
-
-PlayerA,12
-PlayerB,20
-PlayerC,46
-PlayerD,29
-PlayerF,27
