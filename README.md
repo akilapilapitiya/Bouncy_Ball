@@ -1,11 +1,9 @@
-# Ball Bounce
+# Bouncy Ball
 
-A remake of the old Ball Bounce Game 
-
-Project purely usinng C++ as the Final Assignment submission for Programming Concepts module
+Project Created only with the use of Default C++ libraries
 
 
-## Authors
+## Contributors
 
 - [Akila Pilapitiya](https://github.com/akilapilapitiya)
 - [Shuhail Shafeek](https://github.com/Shuhail-hub)
