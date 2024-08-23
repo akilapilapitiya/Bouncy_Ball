@@ -188,7 +188,7 @@ int highScoreIdentifier();             //Identify if the last upadted score is t
 
 //GAME STARTUP FUNCTIONS-------------------------------------------------------------------------------------------------------
 int gameStartUp();                     //All Tasks Handled At Game Start
-//void fileCreateFunction();             //Create 'score.txt' if it does not exist   [Only If Required]
+void fileCreateFunction();             //Create 'score.txt' if it does not exist   [Only If Required]
 int scoreFileReader();                 //Read the Score File and Update the array
 void scoreArraySort();                 //Sort the ScoreArray in descending order
 
@@ -323,6 +323,8 @@ int gameInitialize(){
     cout << "                    |                       |" << endl;
     cout << "                    |Enter Player Name >>>  |" << endl;
     cout << "                    |_______________________|" << endl;
+    cout << endl;
+    cout << "                   (Please... Enter Player without spaces and with a maximum of 12 Character)";
     cout << endl;
     cout << "                    ";
     cin >> playerName;
@@ -576,12 +578,12 @@ int highScoreIdentifier(){
 }
 
 
-//---------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------------------
 //                                 S T A R T U P   F U N C T I O N S
 
 //FUNCTION for the GAME STARTUP
 int gameStartUp(){
-    //fileCreateFunction();                        //Call thew file Create Function
+    fileCreateFunction();                        //Call thew file Create Function
     scoreFileReader();                          //Read the Score File in the Array
     scoreArraySort();                           //Sort the User Details Array in Ascending Order
 
@@ -589,14 +591,14 @@ int gameStartUp(){
 }
 
 //FUNCTION to Create 'score.txt' if it doesn't exist
-/*void fileCreateFunction(){
+void fileCreateFunction(){
     fstream fileCreator;
     fileCreator.open("score.txt", ios::app);
     if(!fileCreator.is_open()){
         cout << "Error in opening the File" << endl;
     }
     fileCreator.close();
-}*/
+}
 
 //FUNCTION to read the Score File and Store in the Array
 int scoreFileReader(){//AKILA
@@ -877,7 +879,7 @@ void creditsInterface(){
 	cout << " |                  C         R      R  E            D      D     I          T      S                           | " << endl;
 	cout << " |                  C         R R R R   E E E E      D      D     I          T        S S S                     | " << endl;
 	cout << " |                  C         R  R      E            D      D     I          T              S                   | " << endl;
-	cout << " |                   C        R    R    E            D     D      I          T              S                   | " << endl;
+	cout << " |                   C        R    R    E            D     D      I          T      S       S                   | " << endl;
 	cout << " |                     C C C  R      R  E E E E E  D D D D    I I I I I      T        S S S                     | " << endl;
 	cout << " |                 ===========================================================================                  | " << endl;
 	cout << " |                                                                                                              | " << endl;
