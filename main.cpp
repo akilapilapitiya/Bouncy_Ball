@@ -118,8 +118,7 @@ string valueStore;              //Used in File Read to get User Scores
 // Keyboard Mapping Directions
 enum eDirect{
     STOP = 0,
-    UP,
-    DOWN
+    UP
 };
 
 // Declare direction variable
@@ -384,7 +383,6 @@ void gameVariableResetFunction(){
     timeOutStatus = timeOutStatusConstant;                                   //Reset Time Out Status Constant
     gameTime = gameTimeReset;                                                //Reset game time
     remainingTime = gameplayTimeUpdater;                                     //Reset remaining time
-
 }
 
 // FUNCTION to handle keyboard input
@@ -396,8 +394,8 @@ void input(){
             case 'w':
                 dir = UP;                       // Move up
                 break;
-            case 's':
-                dir = DOWN;                     // Move down
+            case 'W':
+                dir = UP;                     // Move down
                 break;
             default:
                 break;                          // Do nothing for other keys
@@ -507,7 +505,7 @@ int gameDraw(){
         gameTimeColorChanger = whiteColor;
     }
     //Game Score Display
-    cout << "SCORE: "  << setw(4)<< gameScore << setw(30) << "" << "Remaining Time: ";
+    cout << "\tSCORE: "  << setw(4)<< gameScore << setw(30) << "" << "Remaining Time: ";
     SetConsoleTextAttribute(h, gameTimeColorChanger); 
     cout << setw(3) << remainingTime;
     cout  << " seconds";
@@ -542,7 +540,7 @@ void gameOverDisplay(){
              this_thread::sleep_for(chrono::seconds(timeoutDisplayRefreshConstant));    //sleep console for specified time
              gameOverInterface(); 
         }else{
-            Beep(523, 500);                                                             //Beep sound (523 hertz, time in milliseconds)
+            Beep(1459, 105);                                                             //Beep sound (1459 hertz, time in milliseconds)
             gameOverInterface();                                                        //Call Game Over Interface
     }
     gameOverReturnToMainMenu();
