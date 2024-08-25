@@ -14,7 +14,7 @@ Download the Game - https://github.com/akilapilapitiya/Bouncy_Ball/releases
 - [Akila Benaragama](https://github.com/Benaragama-003)
 - [Shuhail Shafeek](https://github.com/Shuhail-hub)
 
-##How to Run?
+### How to Run?
 
 Use the .exe file found in the https://github.com/akilapilapitiya/Bouncy_Ball/releases
 
