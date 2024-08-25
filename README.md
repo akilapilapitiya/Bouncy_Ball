@@ -5,7 +5,6 @@ This is an attempt to create the classic Bouncy Ball game to run in the terminal
 
 The project is based on native C++ libraries and does not use any specialized graphics libraries.
 
-Download the Game - https://github.com/akilapilapitiya/Bouncy_Ball/releases
 
 ## Authors
 
@@ -16,6 +15,8 @@ Download the Game - https://github.com/akilapilapitiya/Bouncy_Ball/releases
 
 ### How to Run?
 
-Use the .exe file found in the https://github.com/akilapilapitiya/Bouncy_Ball/releases
+Use the latest version .exe file found in https://github.com/akilapilapitiya/Bouncy_Ball/releases
+
+To compile the program use a complier version which supports ISO C++ 2011 standard.
 
 
