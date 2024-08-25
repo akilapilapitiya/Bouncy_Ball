@@ -11,7 +11,7 @@
 #include <conio.h>         //for _kbhit() and _getch() (to control the ball according to inputs)
 using namespace std;
 
-//----------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------
 //                                            G L O B A L   C O N S T A N T S
 
 // GAME RELATED  DIMENSION
@@ -103,7 +103,7 @@ const int blueColor = 3;
 const int pinkColor = 13;
 
 
-//------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------
 //                                            G L O B A L   V A R I A B L E S 
 
 // MENU RELATED
@@ -159,11 +159,11 @@ int scoreColorDesigner;             //Color change in score display
 int gameTimeColorChanger;           //Olor change the remaining time of the game
 
 
-//----------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------
 //                                  G L O B A L I Z E   A L L  F U N C T I O N S
 
 
-// MENU RELATED-------------------------------------------------------------------------------------------------------------
+// MENU RELATED----------------------------------------------------------------------------------------------------------------------
 void gameFrame();                      //Draw the Game Frame
 int mainMenu();                        //Main Menu Configurations
 void returnToMainMenu();               //Function to Return to the Main Menu from Menu Elements
@@ -172,7 +172,7 @@ void creditsPage();                    //Credits Page from main Menu
 int scoreDisplay();                    //Display Scores
 void gameInstructions();               //Instruction Page for the game
 
-//GAME LOGIC RELATED------------------------------------------------------------------------------------------------------------------
+//GAME LOGIC RELATED--------------------------------------------------------------------------------------------------------------
 int gameInitialize();                  //main Menu Connect for new Game
 void gameVariableResetFunction();      //Resets all variable Data for a new Game
 void input();                          //Function to handle keyboard input
@@ -185,13 +185,13 @@ void gameOverDisplay();                //Game Over Prompt with menu Includes
 int dataWriteFunction();               //Function to write the user data to the file
 int highScoreIdentifier();             //Identify if the last upadted score is the highest score
 
-//GAME STARTUP FUNCTIONS-------------------------------------------------------------------------------------------------------
+//GAME STARTUP FUNCTIONS---------------------------------------------------------------------------------------------------------
 int gameStartUp();                     //All Tasks Handled At Game Start
 void fileCreateFunction();             //Create 'score.txt' if it does not exist   [Only If Required]
 int scoreFileReader();                 //Read the Score File and Update the array
 void scoreArraySort();                 //Sort the ScoreArray in descending order
 
-//DRAW FUNCTIONS---------------------------------------------------------------------------------------------------------------
+//DRAW FUNCTIONS-------------------------------------------------------------------------------------------------------------------
 void splashScreenDraw();                //Splash Screen Design
 void gameMenuScreenDraw();              //Game menu Design
 void gameOverInterface();               //Game Over Display Design
@@ -203,11 +203,11 @@ void timeOutGameOverInterface();        //Draw the game over interface when ther
 void goodByeExitInterface();            //Displayed at game Exit
 void gameLoadInterface();               //Game Load Countdown
 
-//TESTING FUNCTIONS----------------------------------------------------------------------------------------------------------------------
+//TESTING FUNCTIONS-------------------------------------------------------------------------------------------------------------------
 void gamePlayTestingDetails();         //inside  gameInitialize();
 
 
-//---------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------
 //                                M E N U   R E L A T E D   F U N C T I O N S 
 
 // FUNCTION to draw the game Frame                                                                 
@@ -309,7 +309,7 @@ void gameInstructions(){
 }
 
 
-//---------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------------
 //                                I N G A M E    F U N C T I O N S
 
 //Function to Initialize the Game
@@ -576,7 +576,7 @@ int highScoreIdentifier(){
 }
 
 
-//-----------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------
 //                                 S T A R T U P   F U N C T I O N S
 
 //FUNCTION for the GAME STARTUP
@@ -599,7 +599,7 @@ void fileCreateFunction(){
 }
 
 //FUNCTION to read the Score File and Store in the Array
-int scoreFileReader(){//AKILA
+int scoreFileReader(){
 	fstream readFile;                           //Read File Variable Defined
     readFile.open("score.txt", ios::in);        //open "score.txt"
     if(!readFile.is_open()){                    //check if the file is open
@@ -625,7 +625,7 @@ int scoreFileReader(){//AKILA
     }
 
 //Sort the Score Array in Descending Order
-void scoreArraySort(){//AKILA
+void scoreArraySort(){
     for(int i = 0; i < numberOfPlayersExpectedConstant; i++){
         for(int m = i; m >= 0; m--){
             if(playerStatArray[m].playerScore < playerStatArray[m + 1].playerScore){
@@ -652,7 +652,7 @@ void scoreArraySort(){//AKILA
 }
 
 
-//-----------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------
 //                                     M A I N   F U N C T I O N
 int main(){
 
@@ -662,7 +662,7 @@ int main(){
 }
 
 
-//------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------
 //                                  D E S I G N      T E M P L A T E S 
 
 void splashScreenDraw(){
@@ -1042,7 +1042,7 @@ void gameLoadInterface(){
 }
 
 
-//-------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------
 //                                   T E S T I N G   A S S I S T A N C E
 
 //Stats Display
