@@ -20,7 +20,7 @@ Use the latest version .exe file found in https://github.com/akilapilapitiya/Bou
 To compile the program use a complier version which supports ISO C++ 2011 standard.
 
 
-## Screenshots
+## Game Screenshots
 
 ![Logo Design](https://github.com/akilapilapitiya/Bouncy_Ball/blob/main/Screenshots/logoDesign.png)
 
