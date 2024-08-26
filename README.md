@@ -15,7 +15,7 @@ The project is based on native C++ libraries and does not use any specialized gr
 
 ## How to Run?
 
-Use the latest version .exe file found in https://github.com/akilapilapitiya/Bouncy_Ball/releases
+Use the latest version .exe file found in <a href = "https://github.com/akilapilapitiya/Bouncy_Ball/releases"> Releases </a>
 
 To compile the program use a complier version which supports ISO C++ 2011 standard.
 
